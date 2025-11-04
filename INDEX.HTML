@@ -2052,7 +2052,26 @@
                         </table>
                     </div>
                 </section>
-
+<!-- Update the Update Order Status Modal -->
+<div class="modal" id="updateOrderStatusModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 class="modal-title">Update Order Status</h3>
+            <button class="modal-close" id="closeUpdateOrderStatusModal">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="form-group">
+                <label for="updateOrderStatus">Order Status</label>
+                <select class="form-control" id="updateOrderStatusSelect">
+                    <option value="order_placed">Order Placed</option>
+                    <option value="pickup_scheduled">Pickup Scheduled</option>
+                    <option value="picked_up">Picked Up</option>
+                    <option value="processing">Processing</option>
+                    <option value="completed">Completed</option>
+                    <option value="delivery_scheduled">Delivery Scheduled</option>
+                    <option value="delivered">Delivered</option>
+                    <option value="cancelled">Cancelled</option>
+                </select>
                 <!-- Services Section -->
                 <section id="adminServicesSection" class="admin-section hidden">
                     <h1 class="admin-section-title">Services Management</h1>
@@ -2078,6 +2097,97 @@
                         </table>
                     </div>
                 </section>
+                <!-- Add Service Modal -->
+<div class="modal" id="addServiceModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 class="modal-title">Add New Service</h3>
+            <button class="modal-close" id="closeAddServiceModal">&times;</button>
+        </div>
+        <div class="modal-body">
+            <form id="addServiceForm">
+                <div class="form-group">
+                    <label for="serviceName">Service Name</label>
+                    <input type="text" class="form-control" id="serviceName" required>
+                </div>
+                <div class="form-group">
+                    <label for="serviceDescription">Description</label>
+                    <textarea class="form-control" id="serviceDescription" rows="3" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="servicePrice">Price (KSH)</label>
+                    <input type="number" class="form-control" id="servicePrice" min="0" step="0.01" required>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" id="cancelAddServiceBtn">Cancel</button>
+            <button class="btn" id="saveServiceBtn">Save</button>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Service Modal -->
+<div class="modal" id="editServiceModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 class="modal-title">Edit Service</h3>
+            <button class="modal-close" id="closeEditServiceModal">&times;</button>
+        </div>
+        <div class="modal-body">
+            <form id="editServiceForm">
+                <input type="hidden" id="editServiceId">
+                <div class="form-group">
+                    <label for="editServiceName">Service Name</label>
+                    <input type="text" class="form-control" id="editServiceName" required>
+                </div>
+                <div class="form-group">
+                    <label for="editServiceDescription">Description</label>
+                    <textarea class="form-control" id="editServiceDescription" rows="3" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="editServicePrice">Price (KSH)</label>
+                    <input type="number" class="form-control" id="editServicePrice" min="0" step="0.01" required>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" id="cancelEditServiceBtn">Cancel</button>
+            <button class="btn" id="updateServiceBtn">Update</button>
+        </div>
+    </div>
+</div>
+
+<!-- Edit User Modal -->
+<div class="modal" id="editUserModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 class="modal-title">Edit User</h3>
+            <button class="modal-close" id="closeEditUserModal">&times;</button>
+        </div>
+        <div class="modal-body">
+            <form id="editUserForm">
+                <input type="hidden" id="editUserId">
+                <div class="form-group">
+                    <label for="editUserName">Name</label>
+                    <input type="text" class="form-control" id="editUserName" required>
+                </div>
+                <div class="form-group">
+                    <label for="editUserEmail">Email</label>
+                    <input type="email" class="form-control" id="editUserEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="editUserPhone">Phone</label>
+                    <input type="tel" class="form-control" id="editUserPhone" required>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" id="cancelEditUserBtn">Cancel</button>
+            <button class="btn" id="updateUserBtn">Update</button>
+        </div>
+    </div>
+</div>
 
                 <!-- Admin Management Section -->
                 <section id="adminAdminsSection" class="admin-section hidden">
@@ -2212,13 +2322,7 @@
             </div>
         </div>
 
-        <!-- Update Order Status Modal -->
-        <div class="modal" id="updateOrderStatusModal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h3 class="modal-title">Update Order Status</h3>
-                    <button class="modal-close" id="closeUpdateOrderStatusModal">&times;</button>
-                </div>
+        </div>
                 <div class="modal-body">
                     <div class="form-group">
                         <label for="updateOrderStatus">Order Status</label>
@@ -2245,7 +2349,13 @@
             </div>
         </div>
 
-        <!-- Add Admin Modal -->
+        <!-- Add A<!-- Update Order Status Modal -->
+        <div class="modal" id="updateOrderStatusModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">Update Order Status</h3>
+                    <button class="modal-close" id="closeUpdateOrderStatusModal">&times;</button>
+                dmin Modal -->
         <div class="modal" id="addAdminModal">
             <div class="modal-content">
                 <div class="modal-header">
@@ -5509,6 +5619,953 @@
 
         // Initialize app when DOM is loaded
         document.addEventListener('DOMContentLoaded', init);
-    </script>
+
+        // Add these functions to your script section
+
+// Service Management Functions
+async function showAddServiceModal() {
+    // Clear form
+    document.getElementById('serviceName').value = '';
+    document.getElementById('serviceDescription').value = '';
+    document.getElementById('servicePrice').value = '';
+    
+    // Show modal
+    document.getElementById('addServiceModal').classList.add('show');
+}
+
+async function showEditServiceModal(serviceId) {
+    try {
+        // Get service data
+        const services = await app.db.getAll('services');
+        const service = services.find(s => s.id === serviceId);
+        
+        if (!service) return;
+        
+        // Fill form with service data
+        document.getElementById('editServiceId').value = service.id;
+        document.getElementById('editServiceName').value = service.name;
+        document.getElementById('editServiceDescription').value = service.description;
+        document.getElementById('editServicePrice').value = service.price;
+        
+        // Show modal
+        document.getElementById('editServiceModal').classList.add('show');
+    } catch (error) {
+        console.error('Error showing edit service modal:', error);
+        showNotification('Error', 'Failed to load service data', 'error');
+    }
+}
+
+async function addService() {
+    try {
+        const name = document.getElementById('serviceName').value;
+        const description = document.getElementById('serviceDescription').value;
+        const price = document.getElementById('servicePrice').value;
+        
+        // Validate form
+        if (!name || !description || !price) {
+            showNotification('Please Fill Complete Information', 'Please fill in all required fields', 'error');
+            return;
+        }
+        
+        // Create new service
+        const newService = {
+            id: Date.now().toString(),
+            name,
+            description,
+            price: parseFloat(price)
+        };
+        
+        // Save to database
+        await app.db.add('services', newService);
+        
+        // Reset form
+        document.getElementById('addServiceForm').reset();
+        document.getElementById('addServiceModal').classList.remove('show');
+        
+        // Reload services table
+        loadServicesTable();
+        
+        // Show notification
+        showNotification('Service Added Successfully', `${name} has been added as a service`, 'success');
+    } catch (error) {
+        console.error('Error adding service:', error);
+        showNotification('Add Failed', 'Failed to add service', 'error');
+    }
+}
+
+async function updateService() {
+    try {
+        const serviceId = document.getElementById('editServiceId').value;
+        const name = document.getElementById('editServiceName').value;
+        const description = document.getElementById('editServiceDescription').value;
+        const price = document.getElementById('editServicePrice').value;
+        
+        // Validate form
+        if (!name || !description || !price) {
+            showNotification('Please Fill Complete Information', 'Please fill in all required fields', 'error');
+            return;
+        }
+        
+        // Find service in database
+        const services = await app.db.getAll('services');
+        const service = services.find(s => s.id === serviceId);
+        
+        if (!service) return;
+        
+        // Update service
+        service.name = name;
+        service.description = description;
+        service.price = parseFloat(price);
+        
+        // Save to database
+        await app.db.update('services', service);
+        
+        // Reset form
+        document.getElementById('editServiceForm').reset();
+        document.getElementById('editServiceModal').classList.remove('show');
+        
+        // Reload services table
+        loadServicesTable();
+        
+        // Show notification
+        showNotification('Service Updated Successfully', `${name} has been updated`, 'success');
+    } catch (error) {
+        console.error('Error updating service:', error);
+        showNotification('Update Failed', 'Failed to update service', 'error');
+    }
+}
+
+async function deleteService(serviceId) {
+    try {
+        // Delete service from database
+        await app.db.delete('services', serviceId);
+        
+        // Reload services table
+        loadServicesTable();
+        
+        // Show notification
+        showNotification('Service Deleted Successfully', 'Service has been deleted', 'success');
+    } catch (error) {
+        console.error('Error deleting service:', error);
+        showNotification('Delete Failed', 'Failed to delete service', 'error');
+    }
+}
+
+// User Management Functions
+async function showEditUserModal(userId) {
+    try {
+        // Get user data
+        const users = await app.db.getAll('users');
+        const user = users.find(u => u.id === userId);
+        
+        if (!user) return;
+        
+        // Fill form with user data
+        document.getElementById('editUserId').value = user.id;
+        document.getElementById('editUserName').value = user.name;
+        document.getElementById('editUserEmail').value = user.email;
+        document.getElementById('editUserPhone').value = user.phone;
+        
+        // Show modal
+        document.getElementById('editUserModal').classList.add('show');
+    } catch (error) {
+        console.error('Error showing edit user modal:', error);
+        showNotification('Error', 'Failed to load user data', 'error');
+    }
+}
+
+async function updateUser() {
+    try {
+        const userId = document.getElementById('editUserId').value;
+        const name = document.getElementById('editUserName').value;
+        const email = document.getElementById('editUserEmail').value;
+        const phone = document.getElementById('editUserPhone').value;
+        
+        // Validate form
+        if (!name || !email || !phone) {
+            showNotification('Please Fill Complete Information', 'Please fill in all required fields', 'error');
+            return;
+        }
+        
+        // Find user in database
+        const users = await app.db.getAll('users');
+        const user = users.find(u => u.id === userId);
+        
+        if (!user) return;
+        
+        // Update user
+        user.name = name;
+        user.email = email;
+        user.phone = phone;
+        
+        // Save to database
+        await app.db.update('users', user);
+        
+        // Reset form
+        document.getElementById('editUserForm').reset();
+        document.getElementById('editUserModal').classList.remove('show');
+        
+        // Reload users table
+        loadUsersTable();
+        
+        // Show notification
+        showNotification('User Updated Successfully', `${name}'s information has been updated`, 'success');
+    } catch (error) {
+        console.error('Error updating user:', error);
+        showNotification('Update Failed', 'Failed to update user', 'error');
+    }
+}
+
+async function deleteUser(userId) {
+    try {
+        // Delete user from database
+        await app.db.delete('users', userId);
+        
+        // Reload users table
+        loadUsersTable();
+        
+        // Show notification
+        showNotification('User Deleted Successfully', 'User has been deleted', 'success');
+    } catch (error) {
+        console.error('Error deleting user:', error);
+        showNotification('Delete Failed', 'Failed to delete user', 'error');
+    }
+}
+
+// Update the loadServicesTable function to include edit and delete buttons
+async function loadServicesTable() {
+    try {
+        // Get services from database
+        const services = await app.db.getAll('services');
+        
+        // Clear table
+        elements.servicesTable.innerHTML = '';
+        
+        if (services.length === 0) {
+            elements.servicesTable.innerHTML = '<tr><td colspan="5" style="text-align: center;">No services found</td></tr>';
+            return;
+        }
+        
+        // Add services to table
+        services.forEach(service => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${service.id}</td>
+                <td>${service.name}</td>
+                <td>${service.description}</td>
+                <td>KSH ${service.price}/item</td>
+                <td>
+                    <div class="table-actions">
+                        <button class="btn edit-service-btn" data-service-id="${service.id}">Edit</button>
+                        <button class="btn btn-danger delete-service-btn" data-service-id="${service.id}">Delete</button>
+                    </div>
+                </td>
+            `;
+            
+            elements.servicesTable.appendChild(row);
+        });
+        
+        // Add event listeners to buttons
+        document.querySelectorAll('.edit-service-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const serviceId = btn.getAttribute('data-service-id');
+                showEditServiceModal(serviceId);
+            });
+        });
+        
+        document.querySelectorAll('.delete-service-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const serviceId = btn.getAttribute('data-service-id');
+                if (confirm('Are you sure you want to delete this service? This action cannot be undone.')) {
+                    deleteService(serviceId);
+                }
+            });
+        });
+    } catch (error) {
+        console.error('Error loading services table:', error);
+    }
+}
+
+// Update the loadUsersTable function to include edit and delete buttons
+async function loadUsersTable() {
+    try {
+        const users = await app.db.getAll('users');
+        
+        // Clear table
+        elements.usersTable.innerHTML = '';
+        
+        if (users.length === 0) {
+            elements.usersTable.innerHTML = '<tr><td colspan="6" style="text-align: center;">No users found</td></tr>';
+            return;
+        }
+        
+        // Add users to table
+        users.forEach(user => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${user.id}</td>
+                <td>${user.name}</td>
+                <td>${user.email}</td>
+                <td>${user.phone}</td>
+                <td>${formatDate(user.registrationDate)}</td>
+                <td>
+                    <div class="table-actions">
+                        <button class="btn view-user-details-btn" data-user-id="${user.id}">View</button>
+                        <button class="btn edit-user-btn" data-user-id="${user.id}">Edit</button>
+                        <button class="btn btn-danger delete-user-btn" data-user-id="${user.id}">Delete</button>
+                    </div>
+                </td>
+            `;
+            
+            elements.usersTable.appendChild(row);
+        });
+        
+        // Add event listeners to buttons
+        document.querySelectorAll('.view-user-details-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const userId = btn.getAttribute('data-user-id');
+                showUserDetails(userId);
+            });
+        });
+        
+        document.querySelectorAll('.edit-user-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const userId = btn.getAttribute('data-user-id');
+                showEditUserModal(userId);
+            });
+        });
+        
+        document.querySelectorAll('.delete-user-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const userId = btn.getAttribute('data-user-id');
+                if (confirm('Are you sure you want to delete this user? This action cannot be undone.')) {
+                    deleteUser(userId);
+                }
+            });
+        });
+    } catch (error) {
+        console.error('Error loading users table:', error);
+    }
+}
+
+// Add these event listeners to the setupEventListeners function
+document.getElementById('addServiceBtn').addEventListener('click', () => {
+    showAddServiceModal();
+});
+
+document.getElementById('closeAddServiceModal').addEventListener('click', () => {
+    document.getElementById('addServiceModal').classList.remove('show');
+});
+
+document.getElementById('cancelAddServiceBtn').addEventListener('click', () => {
+    document.getElementById('addServiceModal').classList.remove('show');
+});
+
+document.getElementById('saveServiceBtn').addEventListener('click', () => {
+    addService();
+});
+
+document.getElementById('closeEditServiceModal').addEventListener('click', () => {
+    document.getElementById('editServiceModal').classList.remove('show');
+});
+
+document.getElementById('cancelEditServiceBtn').addEventListener('click', () => {
+    document.getElementById('editServiceModal').classList.remove('show');
+});
+
+document.getElementById('updateServiceBtn').addEventListener('click', () => {
+    updateService();
+});
+
+document.getElementById('closeEditUserModal').addEventListener('click', () => {
+    document.getElementById('editUserModal').classList.remove('show');
+});
+
+document.getElementById('cancelEditUserBtn').addEventListener('click', () => {
+    document.getElementById('editUserModal').classList.remove('show');
+});
+
+document.getElementById('updateUserBtn').addEventListener('click', () => {
+    updateUser();
+});
+// Update the onupgradeneeded function in the DatabaseManager class
+request.onupgradeneeded = (event) => {
+    const db = event.target.result;
+    
+    // Create object stores if they don't exist
+    if (!db.objectStoreNames.contains('users')) {
+        const userStore = db.createObjectStore('users', { keyPath: 'id' });
+        userStore.createIndex('email', 'email', { unique: true });
+    }
+    
+    if (!db.objectStoreNames.contains('orders')) {
+        const orderStore = db.createObjectStore('orders', { keyPath: 'id' });
+        orderStore.createIndex('userId', 'userId');
+        orderStore.createIndex('status', 'status');
+    }
+    
+    if (!db.objectStoreNames.contains('addresses')) {
+        const addressStore = db.createObjectStore('addresses', { keyPath: 'id' });
+        addressStore.createIndex('userId', 'userId');
+    }
+    
+    if (!db.objectStoreNames.contains('services')) {
+        const serviceStore = db.createObjectStore('services', { keyPath: 'id' });
+    }
+    
+    if (!db.objectStoreNames.contains('settings')) {
+        const settingsStore = db.createObjectStore('settings', { keyPath: 'key' });
+    }
+    
+    // Create admins object store
+    if (!db.objectStoreNames.contains('admins')) {
+        const adminStore = db.createObjectStore('admins', { keyPath: 'id' });
+        adminStore.createIndex('email', 'email', { unique: true });
+    }
+};
+// Update the loadSampleData function to include sample services
+async function loadSampleData() {
+    try {
+        // ... existing code for users, orders, and addresses ...
+        
+        // Check if there are any services in the database
+        const services = await app.db.getAll('services');
+        
+        if (services.length === 0) {
+            // Create sample services
+            const sampleServices = [
+                {
+                    id: 'duvet',
+                    name: 'Duvet (all sizes)',
+                    description: 'Professional cleaning for all sizes of duvets using specialized equipment for thorough cleaning.',
+                    price: 500
+                },
+                {
+                    id: 'beddings',
+                    name: 'Beddings',
+                    description: 'Complete bedding cleaning including sheets, pillowcases, and blankets.',
+                    price: 400
+                },
+                {
+                    id: 'mat',
+                    name: 'Mat (fluffy & hard)',
+                    description: 'Specialized cleaning for all types of mats, from fluffy to hard varieties.',
+                    price: 300
+                },
+                {
+                    id: 'shoes',
+                    name: 'Shoes',
+                    description: 'Professional cleaning and care for all types of shoes.',
+                    price: 350
+                },
+                {
+                    id: 'clothes',
+                    name: 'Clothes',
+                    description: 'Professional cleaning for all types of clothes.',
+                    price: 200
+                },
+                {
+                    id: 'jacket',
+                    name: 'Jacket',
+                    description: 'Specialized cleaning for jackets of all materials.',
+                    price: 450
+                },
+                {
+                    id: 'teddy',
+                    name: 'Teddy bear (Dolly)',
+                    description: 'Gentle cleaning for stuffed animals and teddy bears.',
+                    price: 250
+                },
+                {
+                    id: 'ironing',
+                    name: 'Ironing/Kupiga Pasi',
+                    description: 'Professional ironing services for all types of garments.',
+                    price: 50
+                }
+            ];
+            
+            for (const service of sampleServices) {
+                await app.db.add('services', service);
+            }
+        }
+        
+        // ... existing code for admins ...
+    } catch (error) {
+        console.error('Error loading sample data:', error);
+    }
+}
+// Update the loadRecentOrders function to include delete button
+async function loadRecentOrders() {
+    try {
+        const orders = await app.db.getAll('orders');
+        const users = await app.db.getAll('users');
+        
+        // Sort orders by date (newest first)
+        const sortedOrders = [...orders].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        
+        // Get top 5 recent orders
+        const recentOrders = sortedOrders.slice(0, 5);
+        
+        // Clear table
+        elements.recentOrdersTable.innerHTML = '';
+        
+        if (recentOrders.length === 0) {
+            elements.recentOrdersTable.innerHTML = '<tr><td colspan="7" style="text-align: center;">No orders found</td></tr>';
+            return;
+        }
+        
+        // Add orders to table
+        recentOrders.forEach(order => {
+            const user = users.find(u => u.id === order.userId) || { name: 'Unknown User' };
+            
+            let statusClass = '';
+            switch(order.status) {
+                case 'order_placed':
+                case 'pickup_scheduled':
+                    statusClass = 'status-pending';
+                    break;
+                case 'picked_up':
+                case 'processing':
+                    statusClass = 'status-processing';
+                    break;
+                case 'completed':
+                case 'delivery_scheduled':
+                case 'delivered':
+                    statusClass = 'status-completed';
+                    break;
+                case 'cancelled':
+                    statusClass = 'status-cancelled';
+                    break;
+            }
+            
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${order.id}</td>
+                <td>${user.name}</td>
+                <td>${order.serviceText || order.serviceType}</td>
+                <td>${formatDate(order.createdAt)}</td>
+                <td><span class="order-status ${statusClass}">${order.statusText || order.status}</span></td>
+                <td>KSH ${order.price || 0}</td>
+                <td>
+                    <div class="table-actions">
+                        <button class="btn view-order-details-btn" data-order-id="${order.id}">View</button>
+                        <button class="btn update-order-status-btn" data-order-id="${order.id}">Update</button>
+                        <button class="btn btn-danger delete-order-btn" data-order-id="${order.id}">Delete</button>
+                    </div>
+                </td>
+            `;
+            
+            elements.recentOrdersTable.appendChild(row);
+        });
+        
+        // Add event listeners to view buttons
+        document.querySelectorAll('.view-order-details-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const orderId = btn.getAttribute('data-order-id');
+                showOrderDetails(orderId);
+            });
+        });
+        
+        // Add event listeners to update buttons
+        document.querySelectorAll('.update-order-status-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const orderId = btn.getAttribute('data-order-id');
+                showUpdateOrderStatusModal(orderId);
+            });
+        });
+        
+        // Add event listeners to delete buttons
+        document.querySelectorAll('.delete-order-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const orderId = btn.getAttribute('data-order-id');
+                if (confirm('Are you sure you want to delete this order? This action cannot be undone.')) {
+                    deleteOrder(orderId);
+                }
+            });
+        });
+    } catch (error) {
+        console.error('Error loading recent orders:', error);
+    }
+}
+   
+  // Update the loadOrdersTable function with proper event delegation
+async function loadOrdersTable() {
+    try {
+        const orders = await app.db.getAll('orders');
+        const users = await app.db.getAll('users');
+        
+        // Clear table
+        elements.ordersTable.innerHTML = '';
+        
+        if (orders.length === 0) {
+            elements.ordersTable.innerHTML = '<tr><td colspan="8" style="text-align: center;">No orders found</td></tr>';
+            return;
+        }
+        
+        // Sort orders by date (newest first)
+        const sortedOrders = [...orders].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        
+        // Add orders to table
+        sortedOrders.forEach(order => {
+            const user = users.find(u => u.id === order.userId) || { name: 'Unknown User' };
+            
+            let statusClass = '';
+            switch(order.status) {
+                case 'order_placed':
+                case 'pickup_scheduled':
+                    statusClass = 'status-pending';
+                    break;
+                case 'picked_up':
+                case 'processing':
+                    statusClass = 'status-processing';
+                    break;
+                case 'completed':
+                case 'delivery_scheduled':
+                case 'delivered':
+                    statusClass = 'status-completed';
+                    break;
+                case 'cancelled':
+                    statusClass = 'status-cancelled';
+                    break;
+            }
+            
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${order.id}</td>
+                <td>${user.name}</td>
+                <td>${order.serviceText || order.serviceType}</td>
+                <td>${order.pickupDate} ${order.pickupTime}</td>
+                <td>${order.deliveryDate} ${order.deliveryTime}</td>
+                <td><span class="order-status ${statusClass}">${order.statusText || order.status}</span></td>
+                <td>KSH ${order.price || 0}</td>
+                <td>
+                    <div class="table-actions">
+                        <button class="btn view-order-details-btn" data-order-id="${order.id}">View</button>
+                        <button class="btn update-order-status-btn" data-order-id="${order.id}">Update</button>
+                        <button class="btn btn-danger delete-order-btn" data-order-id="${order.id}">Delete</button>
+                    </div>
+                </td>
+            `;
+            
+            elements.ordersTable.appendChild(row);
+        });
+        
+        // Remove existing event listeners if any
+        const newOrdersTable = elements.ordersTable.cloneNode(true);
+        elements.ordersTable.parentNode.replaceChild(newOrdersTable, elements.ordersTable);
+        elements.ordersTable = newOrdersTable;
+        
+        // Add event listeners using event delegation
+        elements.ordersTable.addEventListener('click', function(e) {
+            const target = e.target;
+            
+            if (target.classList.contains('view-order-details-btn')) {
+                const orderId = target.getAttribute('data-order-id');
+                showOrderDetails(orderId);
+            } else if (target.classList.contains('update-order-status-btn')) {
+                const orderId = target.getAttribute('data-order-id');
+                showUpdateOrderStatusModal(orderId);
+            } else if (target.classList.contains('delete-order-btn')) {
+                const orderId = target.getAttribute('data-order-id');
+                if (confirm('Are you sure you want to delete this order? This action cannot be undone.')) {
+                    deleteOrder(orderId);
+                }
+            }
+        });
+    } catch (error) {
+        console.error('Error loading orders table:', error);
+    }
+}
+// Update the loadRecentOrders function with proper event delegation
+async function loadRecentOrders() {
+    try {
+        const orders = await app.db.getAll('orders');
+        const users = await app.db.getAll('users');
+        
+        // Sort orders by date (newest first)
+        const sortedOrders = [...orders].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        
+        // Get top 5 recent orders
+        const recentOrders = sortedOrders.slice(0, 5);
+        
+        // Clear table
+        elements.recentOrdersTable.innerHTML = '';
+        
+        if (recentOrders.length === 0) {
+            elements.recentOrdersTable.innerHTML = '<tr><td colspan="7" style="text-align: center;">No orders found</td></tr>';
+            return;
+        }
+        
+        // Add orders to table
+        recentOrders.forEach(order => {
+            const user = users.find(u => u.id === order.userId) || { name: 'Unknown User' };
+            
+            let statusClass = '';
+            switch(order.status) {
+                case 'order_placed':
+                case 'pickup_scheduled':
+                    statusClass = 'status-pending';
+                    break;
+                case 'picked_up':
+                case 'processing':
+                    statusClass = 'status-processing';
+                    break;
+                case 'completed':
+                case 'delivery_scheduled':
+                case 'delivered':
+                    statusClass = 'status-completed';
+                    break;
+                case 'cancelled':
+                    statusClass = 'status-cancelled';
+                    break;
+            }
+            
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${order.id}</td>
+                <td>${user.name}</td>
+                <td>${order.serviceText || order.serviceType}</td>
+                <td>${formatDate(order.createdAt)}</td>
+                <td><span class="order-status ${statusClass}">${order.statusText || order.status}</span></td>
+                <td>KSH ${order.price || 0}</td>
+                <td>
+                    <div class="table-actions">
+                        <button class="btn view-order-details-btn" data-order-id="${order.id}">View</button>
+                        <button class="btn update-order-status-btn" data-order-id="${order.id}">Update</button>
+                        <button class="btn btn-danger delete-order-btn" data-order-id="${order.id}">Delete</button>
+                    </div>
+                </td>
+            `;
+            
+            elements.recentOrdersTable.appendChild(row);
+        });
+        
+        // Remove existing event listeners if any
+        const newRecentOrdersTable = elements.recentOrdersTable.cloneNode(true);
+        elements.recentOrdersTable.parentNode.replaceChild(newRecentOrdersTable, elements.recentOrdersTable);
+        elements.recentOrdersTable = newRecentOrdersTable;
+        
+        // Add event listeners using event delegation
+        elements.recentOrdersTable.addEventListener('click', function(e) {
+            const target = e.target;
+            
+            if (target.classList.contains('view-order-details-btn')) {
+                const orderId = target.getAttribute('data-order-id');
+                showOrderDetails(orderId);
+            } else if (target.classList.contains('update-order-status-btn')) {
+                const orderId = target.getAttribute('data-order-id');
+                showUpdateOrderStatusModal(orderId);
+            } else if (target.classList.contains('delete-order-btn')) {
+                const orderId = target.getAttribute('data-order-id');
+                if (confirm('Are you sure you want to delete this order? This action cannot be undone.')) {
+                    deleteOrder(orderId);
+                }
+            }
+        });
+    } catch (error) {
+        console.error('Error loading recent orders:', error);
+    }
+}
+// Add deleteOrder function
+async function deleteOrder(orderId) {
+    try {
+        // Delete order from database
+        await app.db.delete('orders', orderId);
+        
+        // Reload both tables
+        loadOrdersTable();
+        loadRecentOrders();
+        
+        // Show notification
+        showNotification('Order Deleted Successfully', 'Order has been deleted', 'success');
+    } catch (error) {
+        console.error('Error deleting order:', error);
+        showNotification('Delete Failed', 'Failed to delete order', 'error');
+    }
+}
+// Update the updateOrderStatus function
+async function updateOrderStatus() {
+    try {
+        if (!app.currentOrder) return;
+        
+        const newStatus = elements.updateOrderStatusSelect.value;
+        const notes = elements.updateOrderNotes.value;
+        
+        // Get status text
+        let statusText = '';
+        switch(newStatus) {
+            case 'order_placed':
+                statusText = 'Order Placed';
+                break;
+            case 'pickup_scheduled':
+                statusText = 'Pickup Scheduled';
+                break;
+            case 'picked_up':
+                statusText = 'Picked Up';
+                break;
+            case 'processing':
+                statusText = 'Processing';
+                break;
+            case 'completed':
+                statusText = 'Completed';
+                break;
+            case 'delivery_scheduled':
+                statusText = 'Delivery Scheduled';
+                break;
+            case 'delivered':
+                statusText = 'Delivered';
+                break;
+            case 'cancelled':
+                statusText = 'Cancelled';
+                break;
+        }
+        
+        // Update order
+        app.currentOrder.status = newStatus;
+        app.currentOrder.statusText = statusText;
+        
+        if (notes) {
+            app.currentOrder.adminNotes = notes;
+        }
+        
+        // Add status update timestamp
+        app.currentOrder.lastUpdated = new Date().toISOString();
+        
+        // Save to database
+        await app.db.update('orders', app.currentOrder);
+        
+        // Close modal
+        elements.updateOrderStatusModal.classList.remove('show');
+        
+        // Reload both tables
+        loadOrdersTable();
+        loadRecentOrders();
+        
+        // Show notification
+        showNotification('Status Updated', `Order status has been updated to ${statusText}`, 'success');
+    } catch (error) {
+        console.error('Error updating order status:', error);
+        showNotification('Error', 'Failed to update order status', 'error');
+    }
+}
+// Update the showUpdateOrderStatusModal function
+async function showUpdateOrderStatusModal(orderId) {
+    try {
+        const orders = await app.db.getAll('orders');
+        const order = orders.find(o => o.id === orderId);
+        
+        if (!order) return;
+        
+        // Set current order
+        app.currentOrder = order;
+        
+        // Set current status
+        elements.updateOrderStatusSelect.value = order.status;
+        elements.updateOrderNotes.value = order.adminNotes || '';
+        
+        // Display current status
+        const currentStatusElement = document.getElementById('currentOrderStatus');
+        if (currentStatusElement) {
+            currentStatusElement.textContent = order.statusText || order.status;
+            
+            // Add appropriate status class
+            currentStatusElement.className = 'order-status';
+            switch(order.status) {
+                case 'order_placed':
+                case 'pickup_scheduled':
+                    currentStatusElement.classList.add('status-pending');
+                    break;
+                case 'picked_up':
+                case 'processing':
+                    currentStatusElement.classList.add('status-processing');
+                    break;
+                case 'completed':
+                case 'delivery_scheduled':
+                case 'delivered':
+                    currentStatusElement.classList.add('status-completed');
+                    break;
+                case 'cancelled':
+                    currentStatusElement.classList.add('status-cancelled');
+                    break;
+            }
+        }
+        
+        // Display last update time
+        const lastUpdateElement = document.getElementById('lastOrderUpdate');
+        if (lastUpdateElement) {
+            if (order.lastUpdated) {
+                lastUpdateElement.textContent = formatDateTime(order.lastUpdated);
+            } else {
+                lastUpdateElement.textContent = 'Never updated';
+            }
+        }
+        
+        // Show modal
+        elements.updateOrderStatusModal.classList.add('show');
+    } catch (error) {
+        console.error('Error showing update order status modal:', error);
+        showNotification('Error', 'Failed to load order data', 'error');
+    }
+}
+// Update the showUpdateOrderStatusModal function
+async function showUpdateOrderStatusModal(orderId) {
+    try {
+        const orders = await app.db.getAll('orders');
+        const order = orders.find(o => o.id === orderId);
+        
+        if (!order) return;
+        
+        // Set current order
+        app.currentOrder = order;
+        
+        // Set current status
+        elements.updateOrderStatusSelect.value = order.status;
+        elements.updateOrderNotes.value = order.adminNotes || '';
+        
+        // Display current status
+        const currentStatusElement = document.getElementById('currentOrderStatus');
+        if (currentStatusElement) {
+            currentStatusElement.textContent = order.statusText || order.status;
+            
+            // Add appropriate status class
+            currentStatusElement.className = 'order-status';
+            switch(order.status) {
+                case 'order_placed':
+                case 'pickup_scheduled':
+                    currentStatusElement.classList.add('status-pending');
+                    break;
+                case 'picked_up':
+                case 'processing':
+                    currentStatusElement.classList.add('status-processing');
+                    break;
+                case 'completed':
+                case 'delivery_scheduled':
+                case 'delivered':
+                    currentStatusElement.classList.add('status-completed');
+                    break;
+                case 'cancelled':
+                    currentStatusElement.classList.add('status-cancelled');
+                    break;
+            }
+        }
+        
+        // Display last update time
+        const lastUpdateElement = document.getElementById('lastOrderUpdate');
+        if (lastUpdateElement) {
+            if (order.lastUpdated) {
+                lastUpdateElement.textContent = formatDateTime(order.lastUpdated);
+            } else {
+                lastUpdateElement.textContent = 'Never updated';
+            }
+        }
+        
+        // Show modal
+        elements.updateOrderStatusModal.classList.add('show');
+    } catch (error) {
+        console.error('Error showing update order status modal:', error);
+        showNotification('Error', 'Failed to load order data', 'error');
+    }
+} 
+   </script>
 </body>
 </html>
