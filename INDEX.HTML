@@ -442,77 +442,6 @@
             font-weight: 500;
         }
 
-        /* Status Tracking */
-        .status-tracker {
-            background-color: white;
-            border-radius: 10px;
-            box-shadow: var(--shadow);
-            padding: 30px;
-            margin-top: 40px;
-        }
-
-        .status-timeline {
-            position: relative;
-            margin-top: 30px;
-        }
-
-        .status-timeline::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 20px;
-            height: 100%;
-            width: 2px;
-            background-color: #ddd;
-        }
-
-        .status-item {
-            position: relative;
-            padding-left: 60px;
-            margin-bottom: 30px;
-        }
-
-        .status-item:last-child {
-            margin-bottom: 0;
-        }
-
-        .status-icon {
-            position: absolute;
-            left: 0;
-            top: 0;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background-color: #ddd;
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 1;
-        }
-
-        .status-item.completed .status-icon {
-            background-color: var(--secondary-color);
-        }
-
-        .status-item.active .status-icon {
-            background-color: var(--primary-color);
-        }
-
-        .status-content {
-            padding-top: 5px;
-        }
-
-        .status-title {
-            font-weight: 600;
-            margin-bottom: 5px;
-        }
-
-        .status-time {
-            font-size: 0.9rem;
-            color: #7f8c8d;
-        }
-
         /* Dashboard */
         .dashboard-container {
             display: grid;
@@ -1221,34 +1150,8 @@
             <section id="homePage" class="page">
                 <div class="container">
                     <h1 class="section-title">V-Wash Laundry Service, Making Life Easier</h1>
-                    <div class="services-grid">
-                        <div class="service-card">
-                            <div class="service-image" style="background-image: url('duvet.jpeg');"></div>
-                            <div class="service-content">
-                                <h3 class="service-title">Duvet (all sizes)</h3>
-                                <p class="service-description">Professional cleaning for all sizes of duvets using specialized equipment for thorough cleaning.</p>
-                                <div class="service-price">KSH 300/item starting</div>
-                                <button class="btn book-service-btn" data-service="duvet">Book Now</button>
-                            </div>
-                        </div>
-                        <div class="service-card">
-                            <div class="service-image" style="background-image: url('beddings.jpeg');"></div>
-                            <div class="service-content">
-                                <h3 class="service-title">Beddings</h3>
-                                <p class="service-description">Complete bedding cleaning including sheets, pillowcases, and blankets for a fresh sleeping experience.</p>
-                                <div class="service-price">KSH 200/item starting</div>
-                                <button class="btn book-service-btn" data-service="beddings">Book Now</button>
-                            </div>
-                        </div>
-                        <div class="service-card">
-                            <div class="service-image" style="background-image: url('carpet.jpeg');"></div>
-                            <div class="service-content">
-                                <h3 class="service-title">Mat (fluffy & hard)</h3>
-                                <p class="service-description">Specialized cleaning for all types of mats, from fluffy to hard varieties, removing dust and stains.</p>
-                                <div class="service-price">KSH 350/item starting</div>
-                                <button class="btn book-service-btn" data-service="mat">Book Now</button>
-                            </div>
-                        </div>
+                    <div class="services-grid" id="homeServicesGrid">
+                        <!-- Services will be dynamically loaded here -->
                     </div>
                 </div>
             </section>
@@ -1257,89 +1160,8 @@
             <section id="servicesPage" class="page hidden">
                 <div class="container">
                     <h1 class="section-title">Our Services</h1>
-                    <div class="services-grid">
-                        <div class="service-card">
-                            <div class="service-image" style="background-image: url('duvet.jpeg');"></div>
-                            <div class="service-content">
-                                <h3 class="service-title">Duvet (all sizes)</h3>
-                                <p class="service-description">Professional cleaning for all sizes of duvets using specialized equipment for thorough cleaning and sanitization.</p>
-                                <div class="service-price">KSH 300/item starting</div>
-                                <button class="btn book-service-btn" data-service="duvet">Book Now</button>
-                            </div>
-                        </div>
-                        
-                        <div class="service-card">
-                            <div class="service-image" style="background-image: url('beddings.jpeg');"></div>
-                            <div class="service-content">
-                                <h3 class="service-title">Beddings</h3>
-                                <p class="service-description">Complete bedding cleaning including sheets, pillowcases, and blankets for a fresh sleeping experience.</p>
-                                <div class="service-price">KSH 200/item starting</div>
-                                <button class="btn book-service-btn" data-service="beddings">Book Now</button>
-                            </div>
-                        </div>
-                        <div class="service-card">
-                            <div class="service-image" style="background-image: url('mat.jpeg');"></div>
-                            <div class="service-content">
-                                <h3 class="service-title">Mat (fluffy & hard)</h3>
-                                <p class="service-description">Specialized cleaning for all types of mats, from fluffy to hard varieties, removing dust and stains.</p>
-                                <div class="service-price">KSH 350/item starting</div>
-                                <button class="btn book-service-btn" data-service="mat">Book Now</button>
-                            </div>
-                        </div>
-                        <div class="service-card">
-                            <div class="service-image" style="background-image: url('shoes.jpeg');"></div>
-                            <div class="service-content">
-                                <h3 class="service-title">Shoes</h3>
-                                <p class="service-description">Professional cleaning and care for all types of shoes, from sneakers to leather shoes.</p>
-                                <div class="service-price">KSH 50/pair starting</div>
-                                <button class="btn book-service-btn" data-service="shoes">Book Now</button>
-                            </div>
-                        </div>
-                        <div class="service-card">
-                            <div class="service-image" style="background-image: url('clothes.jpeg');"></div>
-                            <div class="service-content">
-                                <h3 class="service-title">Clothes</h3>
-                                <p class="service-description">Professional cleaning for all types of clothes, from daily wear to special occasion garments.</p>
-                                <div class="service-price">KSH 300/launry basket</div>
-                                <button class="btn book-service-btn" data-service="clothes">Book Now</button>
-                            </div>
-                        </div>
-                        <div class="service-card">
-                            <div class="service-image" style="background-image: url('jackets.jpeg');"></div>
-                            <div class="service-content">
-                                <h3 class="service-title">Jacket</h3>
-                                <p class="service-description">Specialized cleaning for jackets of all materials, preserving their quality and appearance.</p>
-                                <div class="service-price">KSH 100/item starting</div>
-                                <button class="btn book-service-btn" data-service="jacket">Book Now</button>
-                            </div>
-                        </div>
-                        <div class="service-card">
-                            <div class="service-image" style="background-image: url('teddybear.jpeg');"></div>
-                            <div class="service-content">
-                                <h3 class="service-title">Teddy bear (Dolly)</h3>
-                                <p class="service-description">Gentle cleaning for stuffed animals and teddy bears, keeping them fresh and safe for children.</p>
-                                <div class="service-price">KSH 50/item starting</div>
-                                <button class="btn book-service-btn" data-service="teddy">Book Now</button>
-                            </div>
-                        </div>
-                        <div class="service-card">
-                            <div class="service-image" style="background-image: url('ironing.jpeg');"></div>
-                            <div class="service-content">
-                                <h3 class="service-title">Ironing/Kupiga Pasi</h3>
-                                <p class="service-description">Professional ironing services for all types of garments, leaving them crisp and wrinkle-free.</p>
-                                <div class="service-price">KSH 50/item starting</div>
-                                <button class="btn book-service-btn" data-service="ironing">Book Now</button>
-                            </div>
-                        </div>
-                        <div class="service-card">
-                            <div class="service-image" style="background-image: url('suit.jpeg');"></div>
-                            <div class="service-content">
-                                <h3 class="service-title">Suit</h3>
-                                <p class="service-description">Professional suit services for all types, both men ad women.</p>
-                                <div class="service-price">KSH 100/item starting</div>
-                                <button class="btn book-service-btn" data-service="ironing">Book Now</button>
-                            </div>
-                        </div>
+                    <div class="services-grid" id="servicesPageGrid">
+                        <!-- Services will be dynamically loaded here -->
                     </div>
                 </div>
             </section>
@@ -1375,14 +1197,7 @@
                                 <label for="serviceType">Service Type</label>
                                 <select class="form-control" id="serviceType">
                                     <option value="">Please select a service type</option>
-                                    <option value="duvet">Duvet (all sizes) - KSH 500/item starting</option>
-                                    <option value="beddings">Beddings - KSH 400/item starting</option>
-                                    <option value="mat">Mat (fluffy & hard) - KSH 300/item starting</option>
-                                    <option value="shoes">Shoes - KSH 350/pair starting</option>
-                                    <option value="clothes">Clothes - KSH 200/item starting</option>
-                                    <option value="jacket">Jacket - KSH 450/item starting</option>
-                                    <option value="teddy">Teddy bear (Dolly) - KSH 250/item starting</option>
-                                    <option value="ironing">Ironing/Kupiga Pasi - KSH 50/item starting</option>
+                                    <!-- Services will be dynamically loaded here -->
                                 </select>
                             </div>
                             <div class="form-group">
@@ -1606,7 +1421,7 @@
                                     </label>
                                 </div>
                                 <div class="form-group">
-                                    <button class="btn">Save Settings</button>
+                                    <button class="btn" id="saveSettingsBtn">Save Settings</button>
                                 </div>
                                 <div class="form-group" style="margin-top: 30px;">
                                     <button class="btn" id="changePasswordBtn">Change Password</button>
@@ -1655,85 +1470,6 @@
                         <div class="form-group">
                             <button class="btn" id="viewOrderBtn">View Order Details</button>
                             <button class="btn" id="backToHomeBtn" style="margin-left: 10px;">Back to Home</button>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Order Status Page -->
-            <section id="statusPage" class="page hidden">
-                <div class="container">
-                    <h1 class="section-title">Order Status</h1>
-                    <div class="status-tracker">
-                        <h2 id="statusOrderId">Order Number: -</h2>
-                        <div class="status-timeline">
-                            <div class="status-item completed" id="statusOrderPlaced">
-                                <div class="status-icon">
-                                    <i class="fas fa-check"></i>
-                                </div>
-                                <div class="status-content">
-                                    <div class="status-title">Order Placed</div>
-                                    <div class="status-time" id="statusOrderPlacedTime">-</div>
-                                </div>
-                            </div>
-                            <div class="status-item" id="statusPickupScheduled">
-                                <div class="status-icon">
-                                    <i class="fas fa-clock"></i>
-                                </div>
-                                <div class="status-content">
-                                    <div class="status-title">Pickup Scheduled</div>
-                                    <div class="status-time" id="statusPickupScheduledTime">-</div>
-                                </div>
-                            </div>
-                            <div class="status-item" id="statusPickedUp">
-                                <div class="status-icon">
-                                    <i class="fas fa-box"></i>
-                                </div>
-                                <div class="status-content">
-                                    <div class="status-title">Picked Up</div>
-                                    <div class="status-time" id="statusPickedUpTime">-</div>
-                                </div>
-                            </div>
-                            <div class="status-item" id="statusProcessing">
-                                <div class="status-icon">
-                                    <i class="fas fa-tshirt"></i>
-                                </div>
-                                <div class="status-content">
-                                    <div class="status-title">Processing</div>
-                                    <div class="status-time" id="statusProcessingTime">-</div>
-                                </div>
-                            </div>
-                            <div class="status-item" id="statusCompleted">
-                                <div class="status-icon">
-                                    <i class="fas fa-check-double"></i>
-                                </div>
-                                <div class="status-content">
-                                    <div class="status-title">Completed</div>
-                                    <div class="status-time" id="statusCompletedTime">-</div>
-                                </div>
-                            </div>
-                            <div class="status-item" id="statusDeliveryScheduled">
-                                <div class="status-icon">
-                                    <i class="fas fa-truck"></i>
-                                </div>
-                                <div class="status-content">
-                                    <div class="status-title">Delivery Scheduled</div>
-                                    <div class="status-time" id="statusDeliveryScheduledTime">-</div>
-                                </div>
-                            </div>
-                            <div class="status-item" id="statusDelivered">
-                                <div class="status-icon">
-                                    <i class="fas fa-home"></i>
-                                </div>
-                                <div class="status-content">
-                                    <div class="status-title">Delivered</div>
-                                    <div class="status-time" id="statusDeliveredTime">-</div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group" style="margin-top: 30px;">
-                            <button class="btn" id="confirmPickupBtn">Confirm Pickup</button>
-                            <button class="btn" id="confirmDeliveryBtn" style="margin-left: 10px;">Confirm Delivery</button>
                         </div>
                     </div>
                 </div>
@@ -1876,6 +1612,22 @@
                 <div class="modal-footer">
                     <button class="btn btn-secondary" id="cancelAddressBtn">Cancel</button>
                     <button class="btn" id="saveAddressBtn">Save</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- User Order Details Modal -->
+        <div class="modal" id="userOrderDetailsModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">Order Details</h3>
+                    <button class="modal-close" id="closeUserOrderDetailsModal">&times;</button>
+                </div>
+                <div class="modal-body" id="userOrderDetailsContent">
+                    <!-- Order details will be added here -->
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" id="closeUserOrderDetailsBtn">Close</button>
                 </div>
             </div>
         </div>
@@ -2052,26 +1804,7 @@
                         </table>
                     </div>
                 </section>
-<!-- Update the Update Order Status Modal -->
-<div class="modal" id="updateOrderStatusModal">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h3 class="modal-title">Update Order Status</h3>
-            <button class="modal-close" id="closeUpdateOrderStatusModal">&times;</button>
-        </div>
-        <div class="modal-body">
-            <div class="form-group">
-                <label for="updateOrderStatus">Order Status</label>
-                <select class="form-control" id="updateOrderStatusSelect">
-                    <option value="order_placed">Order Placed</option>
-                    <option value="pickup_scheduled">Pickup Scheduled</option>
-                    <option value="picked_up">Picked Up</option>
-                    <option value="processing">Processing</option>
-                    <option value="completed">Completed</option>
-                    <option value="delivery_scheduled">Delivery Scheduled</option>
-                    <option value="delivered">Delivered</option>
-                    <option value="cancelled">Cancelled</option>
-                </select>
+
                 <!-- Services Section -->
                 <section id="adminServicesSection" class="admin-section hidden">
                     <h1 class="admin-section-title">Services Management</h1>
@@ -2097,97 +1830,6 @@
                         </table>
                     </div>
                 </section>
-                <!-- Add Service Modal -->
-<div class="modal" id="addServiceModal">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h3 class="modal-title">Add New Service</h3>
-            <button class="modal-close" id="closeAddServiceModal">&times;</button>
-        </div>
-        <div class="modal-body">
-            <form id="addServiceForm">
-                <div class="form-group">
-                    <label for="serviceName">Service Name</label>
-                    <input type="text" class="form-control" id="serviceName" required>
-                </div>
-                <div class="form-group">
-                    <label for="serviceDescription">Description</label>
-                    <textarea class="form-control" id="serviceDescription" rows="3" required></textarea>
-                </div>
-                <div class="form-group">
-                    <label for="servicePrice">Price (KSH)</label>
-                    <input type="number" class="form-control" id="servicePrice" min="0" step="0.01" required>
-                </div>
-            </form>
-        </div>
-        <div class="modal-footer">
-            <button class="btn btn-secondary" id="cancelAddServiceBtn">Cancel</button>
-            <button class="btn" id="saveServiceBtn">Save</button>
-        </div>
-    </div>
-</div>
-
-<!-- Edit Service Modal -->
-<div class="modal" id="editServiceModal">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h3 class="modal-title">Edit Service</h3>
-            <button class="modal-close" id="closeEditServiceModal">&times;</button>
-        </div>
-        <div class="modal-body">
-            <form id="editServiceForm">
-                <input type="hidden" id="editServiceId">
-                <div class="form-group">
-                    <label for="editServiceName">Service Name</label>
-                    <input type="text" class="form-control" id="editServiceName" required>
-                </div>
-                <div class="form-group">
-                    <label for="editServiceDescription">Description</label>
-                    <textarea class="form-control" id="editServiceDescription" rows="3" required></textarea>
-                </div>
-                <div class="form-group">
-                    <label for="editServicePrice">Price (KSH)</label>
-                    <input type="number" class="form-control" id="editServicePrice" min="0" step="0.01" required>
-                </div>
-            </form>
-        </div>
-        <div class="modal-footer">
-            <button class="btn btn-secondary" id="cancelEditServiceBtn">Cancel</button>
-            <button class="btn" id="updateServiceBtn">Update</button>
-        </div>
-    </div>
-</div>
-
-<!-- Edit User Modal -->
-<div class="modal" id="editUserModal">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h3 class="modal-title">Edit User</h3>
-            <button class="modal-close" id="closeEditUserModal">&times;</button>
-        </div>
-        <div class="modal-body">
-            <form id="editUserForm">
-                <input type="hidden" id="editUserId">
-                <div class="form-group">
-                    <label for="editUserName">Name</label>
-                    <input type="text" class="form-control" id="editUserName" required>
-                </div>
-                <div class="form-group">
-                    <label for="editUserEmail">Email</label>
-                    <input type="email" class="form-control" id="editUserEmail" required>
-                </div>
-                <div class="form-group">
-                    <label for="editUserPhone">Phone</label>
-                    <input type="tel" class="form-control" id="editUserPhone" required>
-                </div>
-            </form>
-        </div>
-        <div class="modal-footer">
-            <button class="btn btn-secondary" id="cancelEditUserBtn">Cancel</button>
-            <button class="btn" id="updateUserBtn">Update</button>
-        </div>
-    </div>
-</div>
 
                 <!-- Admin Management Section -->
                 <section id="adminAdminsSection" class="admin-section hidden">
@@ -2243,8 +1885,8 @@
                             
                             <h3 style="margin-top: 30px;">Data Management</h3>
                             <div class="form-group">
-                                <button class="btn" id="exportDbBtn">Export All Data</button>
-                                <button class="btn btn-secondary" id="importDbBtn">Import Data</button>
+                                <button class="btn" id="exportDbBtn2">Export All Data</button>
+                                <button class="btn btn-secondary" id="importDbBtn2">Import Data</button>
                                 <button class="btn btn-danger" id="clearDbBtn" style="margin-left: 10px;">Clear All Data</button>
                             </div>
                             
@@ -2282,7 +1924,7 @@
                                 <input type="tel" class="form-control" id="companyPhone" value="+254 712 345 678">
                             </div>
                             <div class="form-group">
-                                <button class="btn">Save Settings</button>
+                                <button class="btn" id="saveCompanySettingsBtn">Save Settings</button>
                             </div>
                         </div>
                     </div>
@@ -2322,7 +1964,13 @@
             </div>
         </div>
 
-        </div>
+        <!-- Update Order Status Modal -->
+        <div class="modal" id="updateOrderStatusModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">Update Order Status</h3>
+                    <button class="modal-close" id="closeUpdateOrderStatusModal">&times;</button>
+                </div>
                 <div class="modal-body">
                     <div class="form-group">
                         <label for="updateOrderStatus">Order Status</label>
@@ -2349,13 +1997,107 @@
             </div>
         </div>
 
-        <!-- Add A<!-- Update Order Status Modal -->
-        <div class="modal" id="updateOrderStatusModal">
+        <!-- Add Service Modal -->
+        <div class="modal" id="addServiceModal">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h3 class="modal-title">Update Order Status</h3>
-                    <button class="modal-close" id="closeUpdateOrderStatusModal">&times;</button>
-                dmin Modal -->
+                    <h3 class="modal-title">Add New Service</h3>
+                    <button class="modal-close" id="closeAddServiceModal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <form id="addServiceForm">
+                        <div class="form-group">
+                            <label for="serviceName">Service Name</label>
+                            <input type="text" class="form-control" id="serviceName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="serviceDescription">Description</label>
+                            <textarea class="form-control" id="serviceDescription" rows="3" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="servicePrice">Price (KSH)</label>
+                            <input type="number" class="form-control" id="servicePrice" min="0" step="0.01" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="serviceImage">Image URL</label>
+                            <input type="text" class="form-control" id="serviceImage" placeholder="Enter image URL (e.g., duvet.jpeg)">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" id="cancelAddServiceBtn">Cancel</button>
+                    <button class="btn" id="saveServiceBtn">Save</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Edit Service Modal -->
+        <div class="modal" id="editServiceModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">Edit Service</h3>
+                    <button class="modal-close" id="closeEditServiceModal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <form id="editServiceForm">
+                        <input type="hidden" id="editServiceId">
+                        <div class="form-group">
+                            <label for="editServiceName">Service Name</label>
+                            <input type="text" class="form-control" id="editServiceName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editServiceDescription">Description</label>
+                            <textarea class="form-control" id="editServiceDescription" rows="3" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="editServicePrice">Price (KSH)</label>
+                            <input type="number" class="form-control" id="editServicePrice" min="0" step="0.01" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editServiceImage">Image URL</label>
+                            <input type="text" class="form-control" id="editServiceImage" placeholder="Enter image URL">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" id="cancelEditServiceBtn">Cancel</button>
+                    <button class="btn" id="updateServiceBtn">Update</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Edit User Modal -->
+        <div class="modal" id="editUserModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">Edit User</h3>
+                    <button class="modal-close" id="closeEditUserModal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <form id="editUserForm">
+                        <input type="hidden" id="editUserId">
+                        <div class="form-group">
+                            <label for="editUserName">Name</label>
+                            <input type="text" class="form-control" id="editUserName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editUserEmail">Email</label>
+                            <input type="email" class="form-control" id="editUserEmail" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editUserPhone">Phone</label>
+                            <input type="tel" class="form-control" id="editUserPhone" required>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" id="cancelEditUserBtn">Cancel</button>
+                    <button class="btn" id="updateUserBtn">Update</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add Admin Modal -->
         <div class="modal" id="addAdminModal">
             <div class="modal-content">
                 <div class="modal-header">
@@ -2539,7 +2281,7 @@
         class DatabaseManager {
             constructor() {
                 this.dbName = 'freshlaundry_db';
-                this.dbVersion = 2; // Incremented version to trigger upgrade
+                this.dbVersion = 2;
                 this.db = null;
             }
 
@@ -2587,7 +2329,7 @@
                             const settingsStore = db.createObjectStore('settings', { keyPath: 'key' });
                         }
                         
-                        // Create admins object store - THIS WAS MISSING
+                        // Create admins object store
                         if (!db.objectStoreNames.contains('admins')) {
                             const adminStore = db.createObjectStore('admins', { keyPath: 'id' });
                             adminStore.createIndex('email', 'email', { unique: true });
@@ -2604,7 +2346,6 @@
                         return;
                     }
                     
-                    // Check if the object store exists
                     if (!this.db.objectStoreNames.contains(storeName)) {
                         reject(new Error(`Object store '${storeName}' not found`));
                         return;
@@ -2627,7 +2368,6 @@
                         return;
                     }
                     
-                    // Check if the object store exists
                     if (!this.db.objectStoreNames.contains(storeName)) {
                         reject(new Error(`Object store '${storeName}' not found`));
                         return;
@@ -2650,7 +2390,6 @@
                         return;
                     }
                     
-                    // Check if the object store exists
                     if (!this.db.objectStoreNames.contains(storeName)) {
                         reject(new Error(`Object store '${storeName}' not found`));
                         return;
@@ -2673,7 +2412,6 @@
                         return;
                     }
                     
-                    // Check if the object store exists
                     if (!this.db.objectStoreNames.contains(storeName)) {
                         reject(new Error(`Object store '${storeName}' not found`));
                         return;
@@ -2696,7 +2434,6 @@
                         return;
                     }
                     
-                    // Check if the object store exists
                     if (!this.db.objectStoreNames.contains(storeName)) {
                         reject(new Error(`Object store '${storeName}' not found`));
                         return;
@@ -2719,7 +2456,6 @@
                         return;
                     }
                     
-                    // Check if the object store exists
                     if (!this.db.objectStoreNames.contains(storeName)) {
                         reject(new Error(`Object store '${storeName}' not found`));
                         return;
@@ -2854,7 +2590,6 @@
                         return;
                     }
                     
-                    // Check if the object store exists
                     if (!this.db.objectStoreNames.contains(storeName)) {
                         reject(new Error(`Object store '${storeName}' not found`));
                         return;
@@ -2898,7 +2633,6 @@
             bookingPage: document.getElementById('bookingPage'),
             dashboardPage: document.getElementById('dashboardPage'),
             confirmationPage: document.getElementById('confirmationPage'),
-            statusPage: document.getElementById('statusPage'),
             
             // Navigation
             navLinks: document.querySelectorAll('.nav-link'),
@@ -2977,11 +2711,7 @@
             profileForm: document.getElementById('profileForm'),
             addressesList: document.getElementById('addressesList'),
             addAddressBtn: document.getElementById('addAddressBtn'),
-            
-            // Status Page
-            statusOrderId: document.getElementById('statusOrderId'),
-            confirmPickupBtn: document.getElementById('confirmPickupBtn'),
-            confirmDeliveryBtn: document.getElementById('confirmDeliveryBtn'),
+            saveSettingsBtn: document.getElementById('saveSettingsBtn'),
             
             // Address Modal
             addressModal: document.getElementById('addressModal'),
@@ -2989,6 +2719,12 @@
             addressForm: document.getElementById('addressForm'),
             cancelAddressBtn: document.getElementById('cancelAddressBtn'),
             saveAddressBtn: document.getElementById('saveAddressBtn'),
+            
+            // User Order Details Modal
+            userOrderDetailsModal: document.getElementById('userOrderDetailsModal'),
+            userOrderDetailsContent: document.getElementById('userOrderDetailsContent'),
+            closeUserOrderDetailsModal: document.getElementById('closeUserOrderDetailsModal'),
+            closeUserOrderDetailsBtn: document.getElementById('closeUserOrderDetailsBtn'),
             
             // Admin Panel
             adminLogoutBtn: document.getElementById('adminLogoutBtn'),
@@ -3013,10 +2749,15 @@
             dbSize: document.getElementById('dbSize'),
             exportDbBtn: document.getElementById('exportDbBtn'),
             importDbBtn: document.getElementById('importDbBtn'),
+            exportDbBtn2: document.getElementById('exportDbBtn2'),
+            importDbBtn2: document.getElementById('importDbBtn2'),
             clearDbBtn: document.getElementById('clearDbBtn'),
             createBackupBtn: document.getElementById('createBackupBtn'),
             restoreBackupBtn: document.getElementById('restoreBackupBtn'),
             dbStats: document.getElementById('dbStats'),
+            
+            // Admin Settings
+            saveCompanySettingsBtn: document.getElementById('saveCompanySettingsBtn'),
             
             // Admin Modals
             orderDetailsModal: document.getElementById('orderDetailsModal'),
@@ -3048,6 +2789,26 @@
             editAdminForm: document.getElementById('editAdminForm'),
             cancelEditAdminBtn: document.getElementById('cancelEditAdminBtn'),
             updateAdminBtn: document.getElementById('updateAdminBtn'),
+            
+            // Service Management Modals
+            addServiceModal: document.getElementById('addServiceModal'),
+            closeAddServiceModal: document.getElementById('closeAddServiceModal'),
+            addServiceForm: document.getElementById('addServiceForm'),
+            cancelAddServiceBtn: document.getElementById('cancelAddServiceBtn'),
+            saveServiceBtn: document.getElementById('saveServiceBtn'),
+            
+            editServiceModal: document.getElementById('editServiceModal'),
+            closeEditServiceModal: document.getElementById('closeEditServiceModal'),
+            editServiceForm: document.getElementById('editServiceForm'),
+            cancelEditServiceBtn: document.getElementById('cancelEditServiceBtn'),
+            updateServiceBtn: document.getElementById('updateServiceBtn'),
+            
+            // User Management Modals
+            editUserModal: document.getElementById('editUserModal'),
+            closeEditUserModal: document.getElementById('closeEditUserModal'),
+            editUserForm: document.getElementById('editUserForm'),
+            cancelEditUserBtn: document.getElementById('cancelEditUserBtn'),
+            updateUserBtn: document.getElementById('updateUserBtn'),
             
             // Import/Export Modal
             importExportModal: document.getElementById('importExportModal'),
@@ -3087,6 +2848,9 @@
                 
                 // Load sample data if needed
                 await loadSampleData();
+                
+                // Update user services
+                updateUserServices();
                 
                 // Update database status
                 updateDatabaseStatus();
@@ -3165,6 +2929,11 @@
                 elements.dashboardUserName.textContent = app.user.name;
                 elements.dashboardUserEmail.textContent = app.user.email;
                 elements.dashboardUserAvatar.textContent = app.user.name.charAt(0).toUpperCase();
+                
+                // Populate profile form
+                document.getElementById('profileName').value = app.user.name;
+                document.getElementById('profileEmail').value = app.user.email;
+                document.getElementById('profilePhone').value = app.user.phone;
             } else {
                 elements.userInfo.classList.add('hidden');
                 elements.loginPrompt.classList.remove('hidden');
@@ -3225,18 +2994,7 @@
             });
             
             // Booking
-            elements.bookServiceBtns.forEach(btn => {
-                btn.addEventListener('click', () => {
-                    const service = btn.getAttribute('data-service');
-                    if (app.user) {
-                        navigateToPage('booking');
-                        elements.serviceType.value = service;
-                    } else {
-                        showNotification('Please Login', 'You need to login to book a service', 'info');
-                        showAuthModal('login');
-                    }
-                });
-            });
+            // We'll handle book service buttons dynamically in updateUserServices
             
             // Booking Navigation
             elements.nextToStep2.addEventListener('click', () => {
@@ -3300,7 +3058,7 @@
             
             // Confirmation Page
             elements.viewOrderBtn.addEventListener('click', () => {
-                navigateToPage('status');
+                showUserOrderDetails(app.currentOrder);
             });
             
             elements.backToHomeBtn.addEventListener('click', () => {
@@ -3325,6 +3083,10 @@
                 elements.addressModal.classList.add('show');
             });
             
+            elements.saveSettingsBtn.addEventListener('click', () => {
+                saveSettings();
+            });
+            
             // Address Modal
             elements.closeAddressModal.addEventListener('click', () => {
                 elements.addressModal.classList.remove('show');
@@ -3338,13 +3100,13 @@
                 saveAddress();
             });
             
-            // Status Page
-            elements.confirmPickupBtn.addEventListener('click', () => {
-                confirmPickup();
+            // User Order Details Modal
+            elements.closeUserOrderDetailsModal.addEventListener('click', () => {
+                elements.userOrderDetailsModal.classList.remove('show');
             });
             
-            elements.confirmDeliveryBtn.addEventListener('click', () => {
-                confirmDelivery();
+            elements.closeUserOrderDetailsBtn.addEventListener('click', () => {
+                elements.userOrderDetailsModal.classList.remove('show');
             });
             
             // Admin Panel
@@ -3369,6 +3131,14 @@
                 showImportModal();
             });
             
+            elements.exportDbBtn2.addEventListener('click', () => {
+                exportDatabase();
+            });
+            
+            elements.importDbBtn2.addEventListener('click', () => {
+                showImportModal();
+            });
+            
             elements.clearDbBtn.addEventListener('click', () => {
                 if (confirm('Are you sure you want to clear all data? This action cannot be undone.')) {
                     clearDatabase();
@@ -3381,6 +3151,11 @@
             
             elements.restoreBackupBtn.addEventListener('click', () => {
                 showRestoreModal();
+            });
+            
+            // Admin Settings
+            elements.saveCompanySettingsBtn.addEventListener('click', () => {
+                saveCompanySettings();
             });
             
             // Admin Management
@@ -3410,6 +3185,48 @@
             
             elements.updateAdminBtn.addEventListener('click', () => {
                 updateAdmin();
+            });
+            
+            // Service Management
+            document.getElementById('addServiceBtn').addEventListener('click', () => {
+                showAddServiceModal();
+            });
+            
+            elements.closeAddServiceModal.addEventListener('click', () => {
+                elements.addServiceModal.classList.remove('show');
+            });
+            
+            elements.cancelAddServiceBtn.addEventListener('click', () => {
+                elements.addServiceModal.classList.remove('show');
+            });
+            
+            elements.saveServiceBtn.addEventListener('click', () => {
+                addService();
+            });
+            
+            elements.closeEditServiceModal.addEventListener('click', () => {
+                elements.editServiceModal.classList.remove('show');
+            });
+            
+            elements.cancelEditServiceBtn.addEventListener('click', () => {
+                elements.editServiceModal.classList.remove('show');
+            });
+            
+            elements.updateServiceBtn.addEventListener('click', () => {
+                updateService();
+            });
+            
+            // User Management
+            elements.closeEditUserModal.addEventListener('click', () => {
+                elements.editUserModal.classList.remove('show');
+            });
+            
+            elements.cancelEditUserBtn.addEventListener('click', () => {
+                elements.editUserModal.classList.remove('show');
+            });
+            
+            elements.updateUserBtn.addEventListener('click', () => {
+                updateUser();
             });
             
             // Admin Modals
@@ -3478,12 +3295,6 @@
                     break;
                 case 'confirmation':
                     elements.confirmationPage.classList.remove('hidden');
-                    break;
-                case 'status':
-                    elements.statusPage.classList.remove('hidden');
-                    if (app.currentOrder) {
-                        updateOrderStatus(app.currentOrder.id);
-                    }
                     break;
             }
             
@@ -3776,6 +3587,8 @@
                         <td>
                             <div class="table-actions">
                                 <button class="btn view-order-details-btn" data-order-id="${order.id}">View</button>
+                                <button class="btn update-order-status-btn" data-order-id="${order.id}">Update</button>
+                                <button class="btn btn-danger delete-order-btn" data-order-id="${order.id}">Delete</button>
                             </div>
                         </td>
                     `;
@@ -3788,6 +3601,24 @@
                     btn.addEventListener('click', () => {
                         const orderId = btn.getAttribute('data-order-id');
                         showOrderDetails(orderId);
+                    });
+                });
+                
+                // Add event listeners to update buttons
+                document.querySelectorAll('.update-order-status-btn').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const orderId = btn.getAttribute('data-order-id');
+                        showUpdateOrderStatusModal(orderId);
+                    });
+                });
+
+                // Add event listeners to delete buttons
+                document.querySelectorAll('.delete-order-btn').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const orderId = btn.getAttribute('data-order-id');
+                        if (confirm('Are you sure you want to delete this order? This action cannot be undone.')) {
+                            deleteOrder(orderId);
+                        }
                     });
                 });
             } catch (error) {
@@ -3819,6 +3650,8 @@
                         <td>
                             <div class="table-actions">
                                 <button class="btn view-user-details-btn" data-user-id="${user.id}">View</button>
+                                <button class="btn edit-user-btn" data-user-id="${user.id}">Edit</button>
+                                <button class="btn btn-danger delete-user-btn" data-user-id="${user.id}">Delete</button>
                             </div>
                         </td>
                     `;
@@ -3831,6 +3664,24 @@
                     btn.addEventListener('click', () => {
                         const userId = btn.getAttribute('data-user-id');
                         showUserDetails(userId);
+                    });
+                });
+                
+                // Add event listeners to edit buttons
+                document.querySelectorAll('.edit-user-btn').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const userId = btn.getAttribute('data-user-id');
+                        showEditUserModal(userId);
+                    });
+                });
+
+                // Add event listeners to delete buttons
+                document.querySelectorAll('.delete-user-btn').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const userId = btn.getAttribute('data-user-id');
+                        if (confirm('Are you sure you want to delete this user? This will also delete all their orders and addresses.')) {
+                            deleteUser(userId);
+                        }
                     });
                 });
             } catch (error) {
@@ -3891,6 +3742,7 @@
                             <div class="table-actions">
                                 <button class="btn view-order-details-btn" data-order-id="${order.id}">View</button>
                                 <button class="btn update-order-status-btn" data-order-id="${order.id}">Update</button>
+                                <button class="btn btn-danger delete-order-btn" data-order-id="${order.id}">Delete</button>
                             </div>
                         </td>
                     `;
@@ -3912,6 +3764,15 @@
                         showUpdateOrderStatusModal(orderId);
                     });
                 });
+
+                document.querySelectorAll('.delete-order-btn').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const orderId = btn.getAttribute('data-order-id');
+                        if (confirm('Are you sure you want to delete this order? This action cannot be undone.')) {
+                            deleteOrder(orderId);
+                        }
+                    });
+                });
             } catch (error) {
                 console.error('Error loading orders table:', error);
             }
@@ -3919,20 +3780,15 @@
 
         async function loadServicesTable() {
             try {
+                const services = await app.db.getAll('services');
+                
                 // Clear table
                 elements.servicesTable.innerHTML = '';
                 
-                // Define services
-                const services = [
-                    { id: 'duvet', name: 'Duvet (all sizes)', description: 'Professional cleaning for all sizes of duvets', price: 500 },
-                    { id: 'beddings', name: 'Beddings', description: 'Complete bedding cleaning including sheets and pillowcases', price: 400 },
-                    { id: 'mat', name: 'Mat (fluffy & hard)', description: 'Specialized cleaning for all types of mats', price: 300 },
-                    { id: 'shoes', name: 'Shoes', description: 'Professional cleaning and care for footwear', price: 350 },
-                    { id: 'clothes', name: 'Clothes', description: 'Professional cleaning for all types of clothes', price: 200 },
-                    { id: 'jacket', name: 'Jacket', description: 'Specialized cleaning for jackets of all materials', price: 450 },
-                    { id: 'teddy', name: 'Teddy bear (Dolly)', description: 'Gentle cleaning for stuffed animals', price: 250 },
-                    { id: 'ironing', name: 'Ironing/Kupiga Pasi', description: 'Professional ironing services for garments', price: 50 }
-                ];
+                if (services.length === 0) {
+                    elements.servicesTable.innerHTML = '<tr><td colspan="5" style="text-align: center;">No services found</td></tr>';
+                    return;
+                }
                 
                 // Add services to table
                 services.forEach(service => {
@@ -3945,11 +3801,30 @@
                         <td>
                             <div class="table-actions">
                                 <button class="btn edit-service-btn" data-service-id="${service.id}">Edit</button>
+                                <button class="btn btn-danger delete-service-btn" data-service-id="${service.id}">Delete</button>
                             </div>
                         </td>
                     `;
                     
                     elements.servicesTable.appendChild(row);
+                });
+                
+                // Add event listeners to buttons
+                document.querySelectorAll('.edit-service-btn').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const serviceId = btn.getAttribute('data-service-id');
+                        showEditServiceModal(serviceId);
+                    });
+                });
+
+                // Add event listeners to delete buttons
+                document.querySelectorAll('.delete-service-btn').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const serviceId = btn.getAttribute('data-service-id');
+                        if (confirm('Are you sure you want to delete this service? This action cannot be undone.')) {
+                            deleteService(serviceId);
+                        }
+                    });
                 });
             } catch (error) {
                 console.error('Error loading services table:', error);
@@ -4031,6 +3906,283 @@
                 });
             } catch (error) {
                 console.error('Error loading admins table:', error);
+            }
+        }
+
+        // Delete Functions
+        async function deleteUser(userId) {
+            try {
+                // First, delete all orders for this user
+                const orders = await app.db.getAll('orders');
+                const userOrders = orders.filter(order => order.userId === userId);
+                
+                for (const order of userOrders) {
+                    await app.db.delete('orders', order.id);
+                }
+                
+                // Delete all addresses for this user
+                const addresses = await app.db.getAll('addresses');
+                const userAddresses = addresses.filter(address => address.userId === userId);
+                
+                for (const address of userAddresses) {
+                    await app.db.delete('addresses', address.id);
+                }
+                
+                // Finally, delete the user
+                await app.db.delete('users', userId);
+                
+                // Reload users table
+                loadUsersTable();
+                
+                // Show notification
+                showNotification('User Deleted Successfully', 'User and all associated data have been deleted', 'success');
+            } catch (error) {
+                console.error('Error deleting user:', error);
+                showNotification('Delete Failed', 'Failed to delete user', 'error');
+            }
+        }
+
+        async function deleteOrder(orderId) {
+            try {
+                // Delete order from database
+                await app.db.delete('orders', orderId);
+                
+                // Reload orders table
+                loadOrdersTable();
+                
+                // Reload recent orders in dashboard if needed
+                loadRecentOrders();
+                
+                // Show notification
+                showNotification('Order Deleted Successfully', 'Order has been deleted', 'success');
+            } catch (error) {
+                console.error('Error deleting order:', error);
+                showNotification('Delete Failed', 'Failed to delete order', 'error');
+            }
+        }
+
+        async function deleteService(serviceId) {
+            try {
+                // Delete service from database
+                await app.db.delete('services', serviceId);
+                
+                // Reload services table
+                loadServicesTable();
+                
+                // Update services on user pages
+                updateUserServices();
+                
+                // Show notification
+                showNotification('Service Deleted Successfully', 'Service has been deleted', 'success');
+            } catch (error) {
+                console.error('Error deleting service:', error);
+                showNotification('Delete Failed', 'Failed to delete service', 'error');
+            }
+        }
+
+        async function deleteAdmin(adminId) {
+            try {
+                // Delete admin from database
+                await app.db.delete('admins', adminId);
+                
+                // Reload admins table
+                loadAdminsTable();
+                
+                // Show notification
+                showNotification('Admin Deleted Successfully', 'Admin has been deleted', 'success');
+            } catch (error) {
+                console.error('Error deleting admin:', error);
+                showNotification('Delete Failed', 'Failed to delete admin', 'error');
+            }
+        }
+
+        // Service Management Functions
+        function showAddServiceModal() {
+            // Clear form
+            document.getElementById('serviceName').value = '';
+            document.getElementById('serviceDescription').value = '';
+            document.getElementById('servicePrice').value = '';
+            document.getElementById('serviceImage').value = '';
+            
+            // Show modal
+            elements.addServiceModal.classList.add('show');
+        }
+
+        async function showEditServiceModal(serviceId) {
+            try {
+                // Get service data
+                const services = await app.db.getAll('services');
+                const service = services.find(s => s.id === serviceId);
+                
+                if (!service) return;
+                
+                // Fill form with service data
+                document.getElementById('editServiceId').value = service.id;
+                document.getElementById('editServiceName').value = service.name;
+                document.getElementById('editServiceDescription').value = service.description;
+                document.getElementById('editServicePrice').value = service.price;
+                document.getElementById('editServiceImage').value = service.image || '';
+                
+                // Show modal
+                elements.editServiceModal.classList.add('show');
+            } catch (error) {
+                console.error('Error showing edit service modal:', error);
+                showNotification('Error', 'Failed to load service data', 'error');
+            }
+        }
+
+        async function addService() {
+            try {
+                const name = document.getElementById('serviceName').value;
+                const description = document.getElementById('serviceDescription').value;
+                const price = document.getElementById('servicePrice').value;
+                const image = document.getElementById('serviceImage').value;
+                
+                // Validate form
+                if (!name || !description || !price) {
+                    showNotification('Please Fill Complete Information', 'Please fill in all required fields', 'error');
+                    return;
+                }
+                
+                // Create new service
+                const newService = {
+                    id: Date.now().toString(),
+                    name,
+                    description,
+                    price: parseFloat(price),
+                    image: image || 'default-service.jpg'
+                };
+                
+                // Save to database
+                await app.db.add('services', newService);
+                
+                // Reset form
+                document.getElementById('addServiceForm').reset();
+                elements.addServiceModal.classList.remove('show');
+                
+                // Reload services table
+                loadServicesTable();
+                
+                // Update services on user pages
+                updateUserServices();
+                
+                // Show notification
+                showNotification('Service Added Successfully', `${name} has been added as a service`, 'success');
+            } catch (error) {
+                console.error('Error adding service:', error);
+                showNotification('Add Failed', 'Failed to add service', 'error');
+            }
+        }
+
+        async function updateService() {
+            try {
+                const serviceId = document.getElementById('editServiceId').value;
+                const name = document.getElementById('editServiceName').value;
+                const description = document.getElementById('editServiceDescription').value;
+                const price = document.getElementById('editServicePrice').value;
+                const image = document.getElementById('editServiceImage').value;
+                
+                // Validate form
+                if (!name || !description || !price) {
+                    showNotification('Please Fill Complete Information', 'Please fill in all required fields', 'error');
+                    return;
+                }
+                
+                // Find service in database
+                const services = await app.db.getAll('services');
+                const service = services.find(s => s.id === serviceId);
+                
+                if (!service) return;
+                
+                // Update service
+                service.name = name;
+                service.description = description;
+                service.price = parseFloat(price);
+                service.image = image || service.image || 'default-service.jpg';
+                
+                // Save to database
+                await app.db.update('services', service);
+                
+                // Reset form
+                document.getElementById('editServiceForm').reset();
+                elements.editServiceModal.classList.remove('show');
+                
+                // Reload services table
+                loadServicesTable();
+                
+                // Update services on user pages
+                updateUserServices();
+                
+                // Show notification
+                showNotification('Service Updated Successfully', `${name} has been updated`, 'success');
+            } catch (error) {
+                console.error('Error updating service:', error);
+                showNotification('Update Failed', 'Failed to update service', 'error');
+            }
+        }
+
+        // User Management Functions
+        async function showEditUserModal(userId) {
+            try {
+                // Get user data
+                const users = await app.db.getAll('users');
+                const user = users.find(u => u.id === userId);
+                
+                if (!user) return;
+                
+                // Fill form with user data
+                document.getElementById('editUserId').value = user.id;
+                document.getElementById('editUserName').value = user.name;
+                document.getElementById('editUserEmail').value = user.email;
+                document.getElementById('editUserPhone').value = user.phone;
+                
+                // Show modal
+                elements.editUserModal.classList.add('show');
+            } catch (error) {
+                console.error('Error showing edit user modal:', error);
+                showNotification('Error', 'Failed to load user data', 'error');
+            }
+        }
+
+        async function updateUser() {
+            try {
+                const userId = document.getElementById('editUserId').value;
+                const name = document.getElementById('editUserName').value;
+                const email = document.getElementById('editUserEmail').value;
+                const phone = document.getElementById('editUserPhone').value;
+                
+                // Validate form
+                if (!name || !email || !phone) {
+                    showNotification('Please Fill Complete Information', 'Please fill in all required fields', 'error');
+                    return;
+                }
+                
+                // Find user in database
+                const users = await app.db.getAll('users');
+                const user = users.find(u => u.id === userId);
+                
+                if (!user) return;
+                
+                // Update user
+                user.name = name;
+                user.email = email;
+                user.phone = phone;
+                
+                // Save to database
+                await app.db.update('users', user);
+                
+                // Reset form
+                document.getElementById('editUserForm').reset();
+                elements.editUserModal.classList.remove('show');
+                
+                // Reload users table
+                loadUsersTable();
+                
+                // Show notification
+                showNotification('User Updated Successfully', `${name}'s information has been updated`, 'success');
+            } catch (error) {
+                console.error('Error updating user:', error);
+                showNotification('Update Failed', 'Failed to update user', 'error');
             }
         }
 
@@ -4189,22 +4341,6 @@
             }
         }
 
-        async function deleteAdmin(adminId) {
-            try {
-                // Delete admin from database
-                await app.db.delete('admins', adminId);
-                
-                // Reload admins table
-                loadAdminsTable();
-                
-                // Show notification
-                showNotification('Admin Deleted Successfully', 'Admin has been deleted', 'success');
-            } catch (error) {
-                console.error('Error deleting admin:', error);
-                showNotification('Delete Failed', 'Failed to delete admin', 'error');
-            }
-        }
-
         async function showOrderDetails(orderId) {
             try {
                 const orders = await app.db.getAll('orders');
@@ -4281,6 +4417,73 @@
                 elements.orderDetailsModal.classList.add('show');
             } catch (error) {
                 console.error('Error showing order details:', error);
+            }
+        }
+
+        async function showUserOrderDetails(order) {
+            try {
+                // Update modal content
+                elements.userOrderDetailsContent.innerHTML = `
+                    <div class="order-details">
+                        <div class="detail-row">
+                            <span class="detail-label">Order ID:</span>
+                            <span>${order.id}</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Service Type:</span>
+                            <span>${order.serviceText || order.serviceType}</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Number of Items:</span>
+                            <span>${order.itemCount} items</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Special Instructions:</span>
+                            <span>${order.specialInstructions || 'None'}</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Pickup Date:</span>
+                            <span>${order.pickupDate} ${order.pickupTime}</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Pickup Address:</span>
+                            <span>${order.pickupAddress}</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Pickup Contact:</span>
+                            <span>${order.pickupContact} (${order.pickupPhone})</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Delivery Date:</span>
+                            <span>${order.deliveryDate} ${order.deliveryTime}</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Delivery Address:</span>
+                            <span>${order.deliveryAddress}</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Delivery Contact:</span>
+                            <span>${order.deliveryContact} (${order.deliveryPhone})</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Status:</span>
+                            <span>${order.statusText || order.status}</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Order Date:</span>
+                            <span>${formatDate(order.createdAt)}</span>
+                        </div>
+                        <div class="detail-row total">
+                            <span class="detail-label">Total Amount:</span>
+                            <span>KSH ${order.price || 0}</span>
+                        </div>
+                    </div>
+                `;
+                
+                // Show modal
+                elements.userOrderDetailsModal.classList.add('show');
+            } catch (error) {
+                console.error('Error showing user order details:', error);
             }
         }
 
@@ -4601,6 +4804,121 @@
             }
         }
 
+        // Service Management Functions
+        async function updateUserServices() {
+            try {
+                const services = await app.db.getAll('services');
+                
+                // Update services on home page
+                updateServiceCards('homeServicesGrid', services);
+                
+                // Update services on services page
+                updateServiceCards('servicesPageGrid', services);
+                
+                // Update booking form service options
+                updateBookingFormServices(services);
+            } catch (error) {
+                console.error('Error updating user services:', error);
+            }
+        }
+
+        // Helper function to update service cards
+        function updateServiceCards(containerId, services) {
+            const container = document.getElementById(containerId);
+            
+            if (!container) return;
+            
+            container.innerHTML = '';
+            
+            if (services.length === 0) {
+                container.innerHTML = '<p>No services available at the moment.</p>';
+                return;
+            }
+            
+            services.forEach(service => {
+                const serviceCard = document.createElement('div');
+                serviceCard.className = 'service-card';
+                serviceCard.innerHTML = `
+                    <div class="service-image" style="background-image: url('${service.image || 'default-service.jpg'}');"></div>
+                    <div class="service-content">
+                        <h3 class="service-title">${service.name}</h3>
+                        <p class="service-description">${service.description}</p>
+                        <div class="service-price">KSH ${service.price}/item starting</div>
+                        <button class="btn book-service-btn" data-service="${service.id}">Book Now</button>
+                    </div>
+                `;
+                
+                container.appendChild(serviceCard);
+            });
+            
+            // Reattach event listeners to book buttons
+            container.querySelectorAll('.book-service-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const service = btn.getAttribute('data-service');
+                    if (app.user) {
+                        navigateToPage('booking');
+                        elements.serviceType.value = service;
+                    } else {
+                        showNotification('Please Login', 'You need to login to book a service', 'info');
+                        showAuthModal('login');
+                    }
+                });
+            });
+        }
+
+        // Helper function to update booking form services
+        function updateBookingFormServices(services) {
+            const serviceTypeSelect = document.getElementById('serviceType');
+            
+            // Clear existing options except the first one
+            serviceTypeSelect.innerHTML = '<option value="">Please select a service type</option>';
+            
+            // Add services from database
+            services.forEach(service => {
+                const option = document.createElement('option');
+                option.value = service.id;
+                option.textContent = `${service.name} - KSH ${service.price}/item starting`;
+                serviceTypeSelect.appendChild(option);
+            });
+        }
+
+        // Settings Functions
+        async function saveCompanySettings() {
+            try {
+                const companyName = document.getElementById('companyName').value;
+                const companyEmail = document.getElementById('companyEmail').value;
+                const companyPhone = document.getElementById('companyPhone').value;
+                
+                // Save settings to database
+                await app.db.update('settings', { key: 'companyName', value: companyName });
+                await app.db.update('settings', { key: 'companyEmail', value: companyEmail });
+                await app.db.update('settings', { key: 'companyPhone', value: companyPhone });
+                
+                showNotification('Settings Saved', 'Company settings have been updated successfully', 'success');
+            } catch (error) {
+                console.error('Error saving company settings:', error);
+                showNotification('Save Failed', 'Failed to save company settings', 'error');
+            }
+        }
+
+        async function saveSettings() {
+            try {
+                const emailNotifications = document.getElementById('emailNotifications').checked;
+                const smsNotifications = document.getElementById('smsNotifications').checked;
+                const promoNotifications = document.getElementById('promoNotifications').checked;
+                
+                // Save settings to database
+                await app.db.update('settings', { key: 'emailNotifications', value: emailNotifications });
+                await app.db.update('settings', { key: 'smsNotifications', value: smsNotifications });
+                await app.db.update('settings', { key: 'promoNotifications', value: promoNotifications });
+                
+                showNotification('Settings Saved', 'Your settings have been updated successfully', 'success');
+            } catch (error) {
+                console.error('Error saving settings:', error);
+                showNotification('Save Failed', 'Failed to save settings', 'error');
+            }
+        }
+
         // Booking Functions
         function goToBookingStep(step) {
             // Update steps
@@ -4729,31 +5047,39 @@
             
             // Calculate price based on service type and item count
             let basePrice = 0;
-            switch(serviceType) {
-                case 'duvet':
-                    basePrice = 500;
-                    break;
-                case 'beddings':
-                    basePrice = 400;
-                    break;
-                case 'mat':
-                    basePrice = 300;
-                    break;
-                case 'shoes':
-                    basePrice = 350;
-                    break;
-                case 'clothes':
-                    basePrice = 200;
-                    break;
-                case 'jacket':
-                    basePrice = 450;
-                    break;
-                case 'teddy':
-                    basePrice = 250;
-                    break;
-                case 'ironing':
-                    basePrice = 50;
-                    break;
+            const services = app.services || [];
+            const selectedService = services.find(s => s.id === serviceType);
+            
+            if (selectedService) {
+                basePrice = selectedService.price;
+            } else {
+                // Fallback pricing
+                switch(serviceType) {
+                    case 'duvet':
+                        basePrice = 500;
+                        break;
+                    case 'beddings':
+                        basePrice = 400;
+                        break;
+                    case 'mat':
+                        basePrice = 300;
+                        break;
+                    case 'shoes':
+                        basePrice = 350;
+                        break;
+                    case 'clothes':
+                        basePrice = 200;
+                        break;
+                    case 'jacket':
+                        basePrice = 450;
+                        break;
+                    case 'teddy':
+                        basePrice = 250;
+                        break;
+                    case 'ironing':
+                        basePrice = 50;
+                        break;
+                }
             }
             
             const totalPrice = basePrice * itemCount;
@@ -4771,12 +5097,18 @@
 
         async function submitBooking() {
             try {
+                // Get the selected service details
+                const serviceType = elements.serviceType.value;
+                const serviceText = elements.serviceType.options[elements.serviceType.selectedIndex].text;
+                const services = await app.db.getAll('services');
+                const selectedService = services.find(s => s.id === serviceType);
+                
                 // Create order object
                 const order = {
                     id: 'ORD' + Date.now().toString().slice(-8),
                     userId: app.user.id,
-                    serviceType: elements.serviceType.value,
-                    serviceText: elements.serviceType.options[elements.serviceType.selectedIndex].text,
+                    serviceType: serviceType,
+                    serviceText: serviceText,
                     itemCount: elements.itemCount.value,
                     specialInstructions: elements.specialInstructions.value || 'None',
                     pickupDate: elements.pickupDate.value,
@@ -4792,7 +5124,7 @@
                     status: 'order_placed',
                     statusText: 'Order Placed',
                     createdAt: new Date().toISOString(),
-                    price: calculatePrice()
+                    price: calculatePrice(selectedService)
                 };
                 
                 // Save order to database
@@ -4823,11 +5155,17 @@
             }
         }
 
-        function calculatePrice() {
-            const serviceType = elements.serviceType.value;
+        function calculatePrice(service) {
             const itemCount = parseInt(elements.itemCount.value);
             
+            if (service) {
+                return service.price * itemCount;
+            }
+            
+            // Fallback pricing
+            const serviceType = elements.serviceType.value;
             let basePrice = 0;
+            
             switch(serviceType) {
                 case 'duvet':
                     basePrice = 500;
@@ -4901,6 +5239,8 @@
             // Load tab-specific data
             if (tab === 'addresses') {
                 loadAddresses();
+            } else if (tab === 'settings') {
+                loadSettings();
             }
         }
 
@@ -5003,8 +5343,7 @@
                 const order = orders.find(o => o.id === orderId);
                 
                 if (order) {
-                    app.currentOrder = order;
-                    navigateToPage('status');
+                    showUserOrderDetails(order);
                 }
             } catch (error) {
                 console.error('Error viewing order:', error);
@@ -5014,15 +5353,15 @@
         async function cancelOrder(orderId) {
             try {
                 const orders = await app.db.getAll('orders');
-                const orderIndex = orders.findIndex(o => o.id === orderId);
+                const order = orders.find(o => o.id === orderId);
                 
-                if (orderIndex !== -1) {
+                if (order) {
                     // Update order status
-                    orders[orderIndex].status = 'cancelled';
-                    orders[orderIndex].statusText = 'Cancelled';
+                    order.status = 'cancelled';
+                    order.statusText = 'Cancelled';
                     
                     // Save to database
-                    await app.db.update('orders', orders[orderIndex]);
+                    await app.db.update('orders', order);
                     
                     // Reload orders
                     loadOrders();
@@ -5129,6 +5468,30 @@
                 });
             } catch (error) {
                 console.error('Error loading addresses:', error);
+            }
+        }
+
+        async function loadSettings() {
+            try {
+                // Get settings from database
+                const settings = await app.db.getAll('settings');
+                
+                // Set checkbox values
+                const emailNotifications = settings.find(s => s.key === 'emailNotifications');
+                const smsNotifications = settings.find(s => s.key === 'smsNotifications');
+                const promoNotifications = settings.find(s => s.key === 'promoNotifications');
+                
+                if (emailNotifications) {
+                    document.getElementById('emailNotifications').checked = emailNotifications.value;
+                }
+                if (smsNotifications) {
+                    document.getElementById('smsNotifications').checked = smsNotifications.value;
+                }
+                if (promoNotifications) {
+                    document.getElementById('promoNotifications').checked = promoNotifications.value;
+                }
+            } catch (error) {
+                console.error('Error loading settings:', error);
             }
         }
 
@@ -5290,153 +5653,6 @@
             }
         }
 
-        // Order Status Functions
-        async function updateOrderStatus(orderId) {
-            try {
-                const orders = await app.db.getAll('orders');
-                const order = orders.find(o => o.id === orderId);
-                
-                if (!order) return;
-                
-                // Update order ID
-                elements.statusOrderId.textContent = `Order Number: ${order.id}`;
-                
-                // Reset all status items
-                document.querySelectorAll('.status-item').forEach(item => {
-                    item.classList.remove('active', 'completed');
-                    const icon = item.querySelector('.status-icon i');
-                    if (icon) {
-                        icon.className = 'fas fa-clock';
-                    }
-                });
-                
-                // Update status based on order status
-                switch(order.status) {
-                    case 'order_placed':
-                        updateStatusItem('statusOrderPlaced', true, new Date(order.createdAt));
-                        break;
-                    case 'pickup_scheduled':
-                        updateStatusItem('statusOrderPlaced', true, new Date(order.createdAt));
-                        updateStatusItem('statusPickupScheduled', true, new Date(order.pickupDate));
-                        break;
-                    case 'picked_up':
-                        updateStatusItem('statusOrderPlaced', true, new Date(order.createdAt));
-                        updateStatusItem('statusPickupScheduled', true, new Date(order.pickupDate));
-                        updateStatusItem('statusPickedUp', true, new Date(order.pickupDate));
-                        break;
-                    case 'processing':
-                        updateStatusItem('statusOrderPlaced', true, new Date(order.createdAt));
-                        updateStatusItem('statusPickupScheduled', true, new Date(order.pickupDate));
-                        updateStatusItem('statusPickedUp', true, new Date(order.pickupDate));
-                        updateStatusItem('statusProcessing', true, new Date());
-                        break;
-                    case 'completed':
-                        updateStatusItem('statusOrderPlaced', true, new Date(order.createdAt));
-                        updateStatusItem('statusPickupScheduled', true, new Date(order.pickupDate));
-                        updateStatusItem('statusPickedUp', true, new Date(order.pickupDate));
-                        updateStatusItem('statusProcessing', true, new Date());
-                        updateStatusItem('statusCompleted', true, new Date());
-                        break;
-                    case 'delivery_scheduled':
-                        updateStatusItem('statusOrderPlaced', true, new Date(order.createdAt));
-                        updateStatusItem('statusPickupScheduled', true, new Date(order.pickupDate));
-                        updateStatusItem('statusPickedUp', true, new Date(order.pickupDate));
-                        updateStatusItem('statusProcessing', true, new Date());
-                        updateStatusItem('statusCompleted', true, new Date());
-                        updateStatusItem('statusDeliveryScheduled', true, new Date(order.deliveryDate));
-                        break;
-                    case 'delivered':
-                        updateStatusItem('statusOrderPlaced', true, new Date(order.createdAt));
-                        updateStatusItem('statusPickupScheduled', true, new Date(order.pickupDate));
-                        updateStatusItem('statusPickedUp', true, new Date(order.pickupDate));
-                        updateStatusItem('statusProcessing', true, new Date());
-                        updateStatusItem('statusCompleted', true, new Date());
-                        updateStatusItem('statusDeliveryScheduled', true, new Date(order.deliveryDate));
-                        updateStatusItem('statusDelivered', true, new Date(order.deliveryDate));
-                        break;
-                }
-                
-                // Show/hide confirmation buttons based on status
-                if (order.status === 'pickup_scheduled') {
-                    elements.confirmPickupBtn.style.display = 'inline-block';
-                } else {
-                    elements.confirmPickupBtn.style.display = 'none';
-                }
-                
-                if (order.status === 'delivery_scheduled') {
-                    elements.confirmDeliveryBtn.style.display = 'inline-block';
-                } else {
-                    elements.confirmDeliveryBtn.style.display = 'none';
-                }
-            } catch (error) {
-                console.error('Error updating order status:', error);
-            }
-        }
-
-        function updateStatusItem(statusId, isCompleted, time) {
-            const statusItem = document.getElementById(statusId);
-            if (!statusItem) return;
-            
-            if (isCompleted) {
-                statusItem.classList.add('completed');
-                const icon = statusItem.querySelector('.status-icon i');
-                if (icon) {
-                    icon.className = 'fas fa-check';
-                }
-                
-                const timeElement = statusItem.querySelector('.status-time');
-                if (timeElement && time) {
-                    timeElement.textContent = formatDateTime(time);
-                }
-            } else {
-                statusItem.classList.add('active');
-            }
-        }
-
-        async function confirmPickup() {
-            try {
-                if (!app.currentOrder) return;
-                
-                // Update order status
-                app.currentOrder.status = 'picked_up';
-                app.currentOrder.statusText = 'Picked Up';
-                
-                // Save to database
-                await app.db.update('orders', app.currentOrder);
-                
-                // Update UI
-                updateOrderStatus(app.currentOrder.id);
-                
-                // Show notification
-                showNotification('Confirmation Successful', 'Pickup has been confirmed', 'success');
-            } catch (error) {
-                console.error('Error confirming pickup:', error);
-                showNotification('Confirmation Failed', 'Failed to confirm pickup', 'error');
-            }
-        }
-
-        async function confirmDelivery() {
-            try {
-                if (!app.currentOrder) return;
-                
-                // Update order status
-                app.currentOrder.status = 'delivered';
-                app.currentOrder.statusText = 'Delivered';
-                
-                // Save to database
-                await app.db.update('orders', app.currentOrder);
-                
-                // Update UI
-                updateOrderStatus(app.currentOrder.id);
-                
-                // Show notification
-                showNotification('Confirmation Successful', 'Delivery has been confirmed', 'success');
-            } catch (error) {
-                console.error('Error confirming delivery:', error);
-                showNotification('Confirmation Failed', 'Failed to confirm delivery', 'error');
-            }
-        }
-
         // Utility Functions
         function showNotification(title, message, type = 'info') {
             // Update notification content
@@ -5593,6 +5809,75 @@
                     }
                 }
                 
+                // Check if there are any services in the database
+                const services = await app.db.getAll('services');
+                
+                if (services.length === 0) {
+                    // Create sample services with images
+                    const sampleServices = [
+                        {
+                            id: 'duvet',
+                            name: 'Duvet (all sizes)',
+                            description: 'Professional cleaning for all sizes of duvets using specialized equipment for thorough cleaning.',
+                            price: 500,
+                            image: 'duvet.jpeg'
+                        },
+                        {
+                            id: 'beddings',
+                            name: 'Beddings',
+                            description: 'Complete bedding cleaning including sheets, pillowcases, and blankets.',
+                            price: 400,
+                            image: 'beddings.jpeg'
+                        },
+                        {
+                            id: 'mat',
+                            name: 'Mat (fluffy & hard)',
+                            description: 'Specialized cleaning for all types of mats, from fluffy to hard varieties.',
+                            price: 300,
+                            image: 'mat.jpeg'
+                        },
+                        {
+                            id: 'shoes',
+                            name: 'Shoes',
+                            description: 'Professional cleaning and care for all types of shoes.',
+                            price: 350,
+                            image: 'shoes.jpeg'
+                        },
+                        {
+                            id: 'clothes',
+                            name: 'Clothes',
+                            description: 'Professional cleaning for all types of clothes.',
+                            price: 200,
+                            image: 'clothes.jpeg'
+                        },
+                        {
+                            id: 'jacket',
+                            name: 'Jacket',
+                            description: 'Specialized cleaning for jackets of all materials.',
+                            price: 450,
+                            image: 'jackets.jpeg'
+                        },
+                        {
+                            id: 'teddy',
+                            name: 'Teddy bear (Dolly)',
+                            description: 'Gentle cleaning for stuffed animals and teddy bears.',
+                            price: 250,
+                            image: 'teddybear.jpeg'
+                        },
+                        {
+                            id: 'ironing',
+                            name: 'Ironing/Kupiga Pasi',
+                            description: 'Professional ironing services for all types of garments.',
+                            price: 50,
+                            image: 'ironing.jpeg'
+                        }
+                    ];
+                    
+                    for (const service of sampleServices) {
+                        await app.db.add('services', service);
+                    }
+                }
+                
                 // Check if there are any admins in the database
                 const admins = await app.db.getAll('admins');
                 
@@ -5619,953 +5904,6 @@
 
         // Initialize app when DOM is loaded
         document.addEventListener('DOMContentLoaded', init);
-
-        // Add these functions to your script section
-
-// Service Management Functions
-async function showAddServiceModal() {
-    // Clear form
-    document.getElementById('serviceName').value = '';
-    document.getElementById('serviceDescription').value = '';
-    document.getElementById('servicePrice').value = '';
-    
-    // Show modal
-    document.getElementById('addServiceModal').classList.add('show');
-}
-
-async function showEditServiceModal(serviceId) {
-    try {
-        // Get service data
-        const services = await app.db.getAll('services');
-        const service = services.find(s => s.id === serviceId);
-        
-        if (!service) return;
-        
-        // Fill form with service data
-        document.getElementById('editServiceId').value = service.id;
-        document.getElementById('editServiceName').value = service.name;
-        document.getElementById('editServiceDescription').value = service.description;
-        document.getElementById('editServicePrice').value = service.price;
-        
-        // Show modal
-        document.getElementById('editServiceModal').classList.add('show');
-    } catch (error) {
-        console.error('Error showing edit service modal:', error);
-        showNotification('Error', 'Failed to load service data', 'error');
-    }
-}
-
-async function addService() {
-    try {
-        const name = document.getElementById('serviceName').value;
-        const description = document.getElementById('serviceDescription').value;
-        const price = document.getElementById('servicePrice').value;
-        
-        // Validate form
-        if (!name || !description || !price) {
-            showNotification('Please Fill Complete Information', 'Please fill in all required fields', 'error');
-            return;
-        }
-        
-        // Create new service
-        const newService = {
-            id: Date.now().toString(),
-            name,
-            description,
-            price: parseFloat(price)
-        };
-        
-        // Save to database
-        await app.db.add('services', newService);
-        
-        // Reset form
-        document.getElementById('addServiceForm').reset();
-        document.getElementById('addServiceModal').classList.remove('show');
-        
-        // Reload services table
-        loadServicesTable();
-        
-        // Show notification
-        showNotification('Service Added Successfully', `${name} has been added as a service`, 'success');
-    } catch (error) {
-        console.error('Error adding service:', error);
-        showNotification('Add Failed', 'Failed to add service', 'error');
-    }
-}
-
-async function updateService() {
-    try {
-        const serviceId = document.getElementById('editServiceId').value;
-        const name = document.getElementById('editServiceName').value;
-        const description = document.getElementById('editServiceDescription').value;
-        const price = document.getElementById('editServicePrice').value;
-        
-        // Validate form
-        if (!name || !description || !price) {
-            showNotification('Please Fill Complete Information', 'Please fill in all required fields', 'error');
-            return;
-        }
-        
-        // Find service in database
-        const services = await app.db.getAll('services');
-        const service = services.find(s => s.id === serviceId);
-        
-        if (!service) return;
-        
-        // Update service
-        service.name = name;
-        service.description = description;
-        service.price = parseFloat(price);
-        
-        // Save to database
-        await app.db.update('services', service);
-        
-        // Reset form
-        document.getElementById('editServiceForm').reset();
-        document.getElementById('editServiceModal').classList.remove('show');
-        
-        // Reload services table
-        loadServicesTable();
-        
-        // Show notification
-        showNotification('Service Updated Successfully', `${name} has been updated`, 'success');
-    } catch (error) {
-        console.error('Error updating service:', error);
-        showNotification('Update Failed', 'Failed to update service', 'error');
-    }
-}
-
-async function deleteService(serviceId) {
-    try {
-        // Delete service from database
-        await app.db.delete('services', serviceId);
-        
-        // Reload services table
-        loadServicesTable();
-        
-        // Show notification
-        showNotification('Service Deleted Successfully', 'Service has been deleted', 'success');
-    } catch (error) {
-        console.error('Error deleting service:', error);
-        showNotification('Delete Failed', 'Failed to delete service', 'error');
-    }
-}
-
-// User Management Functions
-async function showEditUserModal(userId) {
-    try {
-        // Get user data
-        const users = await app.db.getAll('users');
-        const user = users.find(u => u.id === userId);
-        
-        if (!user) return;
-        
-        // Fill form with user data
-        document.getElementById('editUserId').value = user.id;
-        document.getElementById('editUserName').value = user.name;
-        document.getElementById('editUserEmail').value = user.email;
-        document.getElementById('editUserPhone').value = user.phone;
-        
-        // Show modal
-        document.getElementById('editUserModal').classList.add('show');
-    } catch (error) {
-        console.error('Error showing edit user modal:', error);
-        showNotification('Error', 'Failed to load user data', 'error');
-    }
-}
-
-async function updateUser() {
-    try {
-        const userId = document.getElementById('editUserId').value;
-        const name = document.getElementById('editUserName').value;
-        const email = document.getElementById('editUserEmail').value;
-        const phone = document.getElementById('editUserPhone').value;
-        
-        // Validate form
-        if (!name || !email || !phone) {
-            showNotification('Please Fill Complete Information', 'Please fill in all required fields', 'error');
-            return;
-        }
-        
-        // Find user in database
-        const users = await app.db.getAll('users');
-        const user = users.find(u => u.id === userId);
-        
-        if (!user) return;
-        
-        // Update user
-        user.name = name;
-        user.email = email;
-        user.phone = phone;
-        
-        // Save to database
-        await app.db.update('users', user);
-        
-        // Reset form
-        document.getElementById('editUserForm').reset();
-        document.getElementById('editUserModal').classList.remove('show');
-        
-        // Reload users table
-        loadUsersTable();
-        
-        // Show notification
-        showNotification('User Updated Successfully', `${name}'s information has been updated`, 'success');
-    } catch (error) {
-        console.error('Error updating user:', error);
-        showNotification('Update Failed', 'Failed to update user', 'error');
-    }
-}
-
-async function deleteUser(userId) {
-    try {
-        // Delete user from database
-        await app.db.delete('users', userId);
-        
-        // Reload users table
-        loadUsersTable();
-        
-        // Show notification
-        showNotification('User Deleted Successfully', 'User has been deleted', 'success');
-    } catch (error) {
-        console.error('Error deleting user:', error);
-        showNotification('Delete Failed', 'Failed to delete user', 'error');
-    }
-}
-
-// Update the loadServicesTable function to include edit and delete buttons
-async function loadServicesTable() {
-    try {
-        // Get services from database
-        const services = await app.db.getAll('services');
-        
-        // Clear table
-        elements.servicesTable.innerHTML = '';
-        
-        if (services.length === 0) {
-            elements.servicesTable.innerHTML = '<tr><td colspan="5" style="text-align: center;">No services found</td></tr>';
-            return;
-        }
-        
-        // Add services to table
-        services.forEach(service => {
-            const row = document.createElement('tr');
-            row.innerHTML = `
-                <td>${service.id}</td>
-                <td>${service.name}</td>
-                <td>${service.description}</td>
-                <td>KSH ${service.price}/item</td>
-                <td>
-                    <div class="table-actions">
-                        <button class="btn edit-service-btn" data-service-id="${service.id}">Edit</button>
-                        <button class="btn btn-danger delete-service-btn" data-service-id="${service.id}">Delete</button>
-                    </div>
-                </td>
-            `;
-            
-            elements.servicesTable.appendChild(row);
-        });
-        
-        // Add event listeners to buttons
-        document.querySelectorAll('.edit-service-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const serviceId = btn.getAttribute('data-service-id');
-                showEditServiceModal(serviceId);
-            });
-        });
-        
-        document.querySelectorAll('.delete-service-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const serviceId = btn.getAttribute('data-service-id');
-                if (confirm('Are you sure you want to delete this service? This action cannot be undone.')) {
-                    deleteService(serviceId);
-                }
-            });
-        });
-    } catch (error) {
-        console.error('Error loading services table:', error);
-    }
-}
-
-// Update the loadUsersTable function to include edit and delete buttons
-async function loadUsersTable() {
-    try {
-        const users = await app.db.getAll('users');
-        
-        // Clear table
-        elements.usersTable.innerHTML = '';
-        
-        if (users.length === 0) {
-            elements.usersTable.innerHTML = '<tr><td colspan="6" style="text-align: center;">No users found</td></tr>';
-            return;
-        }
-        
-        // Add users to table
-        users.forEach(user => {
-            const row = document.createElement('tr');
-            row.innerHTML = `
-                <td>${user.id}</td>
-                <td>${user.name}</td>
-                <td>${user.email}</td>
-                <td>${user.phone}</td>
-                <td>${formatDate(user.registrationDate)}</td>
-                <td>
-                    <div class="table-actions">
-                        <button class="btn view-user-details-btn" data-user-id="${user.id}">View</button>
-                        <button class="btn edit-user-btn" data-user-id="${user.id}">Edit</button>
-                        <button class="btn btn-danger delete-user-btn" data-user-id="${user.id}">Delete</button>
-                    </div>
-                </td>
-            `;
-            
-            elements.usersTable.appendChild(row);
-        });
-        
-        // Add event listeners to buttons
-        document.querySelectorAll('.view-user-details-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const userId = btn.getAttribute('data-user-id');
-                showUserDetails(userId);
-            });
-        });
-        
-        document.querySelectorAll('.edit-user-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const userId = btn.getAttribute('data-user-id');
-                showEditUserModal(userId);
-            });
-        });
-        
-        document.querySelectorAll('.delete-user-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const userId = btn.getAttribute('data-user-id');
-                if (confirm('Are you sure you want to delete this user? This action cannot be undone.')) {
-                    deleteUser(userId);
-                }
-            });
-        });
-    } catch (error) {
-        console.error('Error loading users table:', error);
-    }
-}
-
-// Add these event listeners to the setupEventListeners function
-document.getElementById('addServiceBtn').addEventListener('click', () => {
-    showAddServiceModal();
-});
-
-document.getElementById('closeAddServiceModal').addEventListener('click', () => {
-    document.getElementById('addServiceModal').classList.remove('show');
-});
-
-document.getElementById('cancelAddServiceBtn').addEventListener('click', () => {
-    document.getElementById('addServiceModal').classList.remove('show');
-});
-
-document.getElementById('saveServiceBtn').addEventListener('click', () => {
-    addService();
-});
-
-document.getElementById('closeEditServiceModal').addEventListener('click', () => {
-    document.getElementById('editServiceModal').classList.remove('show');
-});
-
-document.getElementById('cancelEditServiceBtn').addEventListener('click', () => {
-    document.getElementById('editServiceModal').classList.remove('show');
-});
-
-document.getElementById('updateServiceBtn').addEventListener('click', () => {
-    updateService();
-});
-
-document.getElementById('closeEditUserModal').addEventListener('click', () => {
-    document.getElementById('editUserModal').classList.remove('show');
-});
-
-document.getElementById('cancelEditUserBtn').addEventListener('click', () => {
-    document.getElementById('editUserModal').classList.remove('show');
-});
-
-document.getElementById('updateUserBtn').addEventListener('click', () => {
-    updateUser();
-});
-// Update the onupgradeneeded function in the DatabaseManager class
-request.onupgradeneeded = (event) => {
-    const db = event.target.result;
-    
-    // Create object stores if they don't exist
-    if (!db.objectStoreNames.contains('users')) {
-        const userStore = db.createObjectStore('users', { keyPath: 'id' });
-        userStore.createIndex('email', 'email', { unique: true });
-    }
-    
-    if (!db.objectStoreNames.contains('orders')) {
-        const orderStore = db.createObjectStore('orders', { keyPath: 'id' });
-        orderStore.createIndex('userId', 'userId');
-        orderStore.createIndex('status', 'status');
-    }
-    
-    if (!db.objectStoreNames.contains('addresses')) {
-        const addressStore = db.createObjectStore('addresses', { keyPath: 'id' });
-        addressStore.createIndex('userId', 'userId');
-    }
-    
-    if (!db.objectStoreNames.contains('services')) {
-        const serviceStore = db.createObjectStore('services', { keyPath: 'id' });
-    }
-    
-    if (!db.objectStoreNames.contains('settings')) {
-        const settingsStore = db.createObjectStore('settings', { keyPath: 'key' });
-    }
-    
-    // Create admins object store
-    if (!db.objectStoreNames.contains('admins')) {
-        const adminStore = db.createObjectStore('admins', { keyPath: 'id' });
-        adminStore.createIndex('email', 'email', { unique: true });
-    }
-};
-// Update the loadSampleData function to include sample services
-async function loadSampleData() {
-    try {
-        // ... existing code for users, orders, and addresses ...
-        
-        // Check if there are any services in the database
-        const services = await app.db.getAll('services');
-        
-        if (services.length === 0) {
-            // Create sample services
-            const sampleServices = [
-                {
-                    id: 'duvet',
-                    name: 'Duvet (all sizes)',
-                    description: 'Professional cleaning for all sizes of duvets using specialized equipment for thorough cleaning.',
-                    price: 500
-                },
-                {
-                    id: 'beddings',
-                    name: 'Beddings',
-                    description: 'Complete bedding cleaning including sheets, pillowcases, and blankets.',
-                    price: 400
-                },
-                {
-                    id: 'mat',
-                    name: 'Mat (fluffy & hard)',
-                    description: 'Specialized cleaning for all types of mats, from fluffy to hard varieties.',
-                    price: 300
-                },
-                {
-                    id: 'shoes',
-                    name: 'Shoes',
-                    description: 'Professional cleaning and care for all types of shoes.',
-                    price: 350
-                },
-                {
-                    id: 'clothes',
-                    name: 'Clothes',
-                    description: 'Professional cleaning for all types of clothes.',
-                    price: 200
-                },
-                {
-                    id: 'jacket',
-                    name: 'Jacket',
-                    description: 'Specialized cleaning for jackets of all materials.',
-                    price: 450
-                },
-                {
-                    id: 'teddy',
-                    name: 'Teddy bear (Dolly)',
-                    description: 'Gentle cleaning for stuffed animals and teddy bears.',
-                    price: 250
-                },
-                {
-                    id: 'ironing',
-                    name: 'Ironing/Kupiga Pasi',
-                    description: 'Professional ironing services for all types of garments.',
-                    price: 50
-                }
-            ];
-            
-            for (const service of sampleServices) {
-                await app.db.add('services', service);
-            }
-        }
-        
-        // ... existing code for admins ...
-    } catch (error) {
-        console.error('Error loading sample data:', error);
-    }
-}
-// Update the loadRecentOrders function to include delete button
-async function loadRecentOrders() {
-    try {
-        const orders = await app.db.getAll('orders');
-        const users = await app.db.getAll('users');
-        
-        // Sort orders by date (newest first)
-        const sortedOrders = [...orders].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-        
-        // Get top 5 recent orders
-        const recentOrders = sortedOrders.slice(0, 5);
-        
-        // Clear table
-        elements.recentOrdersTable.innerHTML = '';
-        
-        if (recentOrders.length === 0) {
-            elements.recentOrdersTable.innerHTML = '<tr><td colspan="7" style="text-align: center;">No orders found</td></tr>';
-            return;
-        }
-        
-        // Add orders to table
-        recentOrders.forEach(order => {
-            const user = users.find(u => u.id === order.userId) || { name: 'Unknown User' };
-            
-            let statusClass = '';
-            switch(order.status) {
-                case 'order_placed':
-                case 'pickup_scheduled':
-                    statusClass = 'status-pending';
-                    break;
-                case 'picked_up':
-                case 'processing':
-                    statusClass = 'status-processing';
-                    break;
-                case 'completed':
-                case 'delivery_scheduled':
-                case 'delivered':
-                    statusClass = 'status-completed';
-                    break;
-                case 'cancelled':
-                    statusClass = 'status-cancelled';
-                    break;
-            }
-            
-            const row = document.createElement('tr');
-            row.innerHTML = `
-                <td>${order.id}</td>
-                <td>${user.name}</td>
-                <td>${order.serviceText || order.serviceType}</td>
-                <td>${formatDate(order.createdAt)}</td>
-                <td><span class="order-status ${statusClass}">${order.statusText || order.status}</span></td>
-                <td>KSH ${order.price || 0}</td>
-                <td>
-                    <div class="table-actions">
-                        <button class="btn view-order-details-btn" data-order-id="${order.id}">View</button>
-                        <button class="btn update-order-status-btn" data-order-id="${order.id}">Update</button>
-                        <button class="btn btn-danger delete-order-btn" data-order-id="${order.id}">Delete</button>
-                    </div>
-                </td>
-            `;
-            
-            elements.recentOrdersTable.appendChild(row);
-        });
-        
-        // Add event listeners to view buttons
-        document.querySelectorAll('.view-order-details-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const orderId = btn.getAttribute('data-order-id');
-                showOrderDetails(orderId);
-            });
-        });
-        
-        // Add event listeners to update buttons
-        document.querySelectorAll('.update-order-status-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const orderId = btn.getAttribute('data-order-id');
-                showUpdateOrderStatusModal(orderId);
-            });
-        });
-        
-        // Add event listeners to delete buttons
-        document.querySelectorAll('.delete-order-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const orderId = btn.getAttribute('data-order-id');
-                if (confirm('Are you sure you want to delete this order? This action cannot be undone.')) {
-                    deleteOrder(orderId);
-                }
-            });
-        });
-    } catch (error) {
-        console.error('Error loading recent orders:', error);
-    }
-}
-   
-  // Update the loadOrdersTable function with proper event delegation
-async function loadOrdersTable() {
-    try {
-        const orders = await app.db.getAll('orders');
-        const users = await app.db.getAll('users');
-        
-        // Clear table
-        elements.ordersTable.innerHTML = '';
-        
-        if (orders.length === 0) {
-            elements.ordersTable.innerHTML = '<tr><td colspan="8" style="text-align: center;">No orders found</td></tr>';
-            return;
-        }
-        
-        // Sort orders by date (newest first)
-        const sortedOrders = [...orders].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-        
-        // Add orders to table
-        sortedOrders.forEach(order => {
-            const user = users.find(u => u.id === order.userId) || { name: 'Unknown User' };
-            
-            let statusClass = '';
-            switch(order.status) {
-                case 'order_placed':
-                case 'pickup_scheduled':
-                    statusClass = 'status-pending';
-                    break;
-                case 'picked_up':
-                case 'processing':
-                    statusClass = 'status-processing';
-                    break;
-                case 'completed':
-                case 'delivery_scheduled':
-                case 'delivered':
-                    statusClass = 'status-completed';
-                    break;
-                case 'cancelled':
-                    statusClass = 'status-cancelled';
-                    break;
-            }
-            
-            const row = document.createElement('tr');
-            row.innerHTML = `
-                <td>${order.id}</td>
-                <td>${user.name}</td>
-                <td>${order.serviceText || order.serviceType}</td>
-                <td>${order.pickupDate} ${order.pickupTime}</td>
-                <td>${order.deliveryDate} ${order.deliveryTime}</td>
-                <td><span class="order-status ${statusClass}">${order.statusText || order.status}</span></td>
-                <td>KSH ${order.price || 0}</td>
-                <td>
-                    <div class="table-actions">
-                        <button class="btn view-order-details-btn" data-order-id="${order.id}">View</button>
-                        <button class="btn update-order-status-btn" data-order-id="${order.id}">Update</button>
-                        <button class="btn btn-danger delete-order-btn" data-order-id="${order.id}">Delete</button>
-                    </div>
-                </td>
-            `;
-            
-            elements.ordersTable.appendChild(row);
-        });
-        
-        // Remove existing event listeners if any
-        const newOrdersTable = elements.ordersTable.cloneNode(true);
-        elements.ordersTable.parentNode.replaceChild(newOrdersTable, elements.ordersTable);
-        elements.ordersTable = newOrdersTable;
-        
-        // Add event listeners using event delegation
-        elements.ordersTable.addEventListener('click', function(e) {
-            const target = e.target;
-            
-            if (target.classList.contains('view-order-details-btn')) {
-                const orderId = target.getAttribute('data-order-id');
-                showOrderDetails(orderId);
-            } else if (target.classList.contains('update-order-status-btn')) {
-                const orderId = target.getAttribute('data-order-id');
-                showUpdateOrderStatusModal(orderId);
-            } else if (target.classList.contains('delete-order-btn')) {
-                const orderId = target.getAttribute('data-order-id');
-                if (confirm('Are you sure you want to delete this order? This action cannot be undone.')) {
-                    deleteOrder(orderId);
-                }
-            }
-        });
-    } catch (error) {
-        console.error('Error loading orders table:', error);
-    }
-}
-// Update the loadRecentOrders function with proper event delegation
-async function loadRecentOrders() {
-    try {
-        const orders = await app.db.getAll('orders');
-        const users = await app.db.getAll('users');
-        
-        // Sort orders by date (newest first)
-        const sortedOrders = [...orders].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-        
-        // Get top 5 recent orders
-        const recentOrders = sortedOrders.slice(0, 5);
-        
-        // Clear table
-        elements.recentOrdersTable.innerHTML = '';
-        
-        if (recentOrders.length === 0) {
-            elements.recentOrdersTable.innerHTML = '<tr><td colspan="7" style="text-align: center;">No orders found</td></tr>';
-            return;
-        }
-        
-        // Add orders to table
-        recentOrders.forEach(order => {
-            const user = users.find(u => u.id === order.userId) || { name: 'Unknown User' };
-            
-            let statusClass = '';
-            switch(order.status) {
-                case 'order_placed':
-                case 'pickup_scheduled':
-                    statusClass = 'status-pending';
-                    break;
-                case 'picked_up':
-                case 'processing':
-                    statusClass = 'status-processing';
-                    break;
-                case 'completed':
-                case 'delivery_scheduled':
-                case 'delivered':
-                    statusClass = 'status-completed';
-                    break;
-                case 'cancelled':
-                    statusClass = 'status-cancelled';
-                    break;
-            }
-            
-            const row = document.createElement('tr');
-            row.innerHTML = `
-                <td>${order.id}</td>
-                <td>${user.name}</td>
-                <td>${order.serviceText || order.serviceType}</td>
-                <td>${formatDate(order.createdAt)}</td>
-                <td><span class="order-status ${statusClass}">${order.statusText || order.status}</span></td>
-                <td>KSH ${order.price || 0}</td>
-                <td>
-                    <div class="table-actions">
-                        <button class="btn view-order-details-btn" data-order-id="${order.id}">View</button>
-                        <button class="btn update-order-status-btn" data-order-id="${order.id}">Update</button>
-                        <button class="btn btn-danger delete-order-btn" data-order-id="${order.id}">Delete</button>
-                    </div>
-                </td>
-            `;
-            
-            elements.recentOrdersTable.appendChild(row);
-        });
-        
-        // Remove existing event listeners if any
-        const newRecentOrdersTable = elements.recentOrdersTable.cloneNode(true);
-        elements.recentOrdersTable.parentNode.replaceChild(newRecentOrdersTable, elements.recentOrdersTable);
-        elements.recentOrdersTable = newRecentOrdersTable;
-        
-        // Add event listeners using event delegation
-        elements.recentOrdersTable.addEventListener('click', function(e) {
-            const target = e.target;
-            
-            if (target.classList.contains('view-order-details-btn')) {
-                const orderId = target.getAttribute('data-order-id');
-                showOrderDetails(orderId);
-            } else if (target.classList.contains('update-order-status-btn')) {
-                const orderId = target.getAttribute('data-order-id');
-                showUpdateOrderStatusModal(orderId);
-            } else if (target.classList.contains('delete-order-btn')) {
-                const orderId = target.getAttribute('data-order-id');
-                if (confirm('Are you sure you want to delete this order? This action cannot be undone.')) {
-                    deleteOrder(orderId);
-                }
-            }
-        });
-    } catch (error) {
-        console.error('Error loading recent orders:', error);
-    }
-}
-// Add deleteOrder function
-async function deleteOrder(orderId) {
-    try {
-        // Delete order from database
-        await app.db.delete('orders', orderId);
-        
-        // Reload both tables
-        loadOrdersTable();
-        loadRecentOrders();
-        
-        // Show notification
-        showNotification('Order Deleted Successfully', 'Order has been deleted', 'success');
-    } catch (error) {
-        console.error('Error deleting order:', error);
-        showNotification('Delete Failed', 'Failed to delete order', 'error');
-    }
-}
-// Update the updateOrderStatus function
-async function updateOrderStatus() {
-    try {
-        if (!app.currentOrder) return;
-        
-        const newStatus = elements.updateOrderStatusSelect.value;
-        const notes = elements.updateOrderNotes.value;
-        
-        // Get status text
-        let statusText = '';
-        switch(newStatus) {
-            case 'order_placed':
-                statusText = 'Order Placed';
-                break;
-            case 'pickup_scheduled':
-                statusText = 'Pickup Scheduled';
-                break;
-            case 'picked_up':
-                statusText = 'Picked Up';
-                break;
-            case 'processing':
-                statusText = 'Processing';
-                break;
-            case 'completed':
-                statusText = 'Completed';
-                break;
-            case 'delivery_scheduled':
-                statusText = 'Delivery Scheduled';
-                break;
-            case 'delivered':
-                statusText = 'Delivered';
-                break;
-            case 'cancelled':
-                statusText = 'Cancelled';
-                break;
-        }
-        
-        // Update order
-        app.currentOrder.status = newStatus;
-        app.currentOrder.statusText = statusText;
-        
-        if (notes) {
-            app.currentOrder.adminNotes = notes;
-        }
-        
-        // Add status update timestamp
-        app.currentOrder.lastUpdated = new Date().toISOString();
-        
-        // Save to database
-        await app.db.update('orders', app.currentOrder);
-        
-        // Close modal
-        elements.updateOrderStatusModal.classList.remove('show');
-        
-        // Reload both tables
-        loadOrdersTable();
-        loadRecentOrders();
-        
-        // Show notification
-        showNotification('Status Updated', `Order status has been updated to ${statusText}`, 'success');
-    } catch (error) {
-        console.error('Error updating order status:', error);
-        showNotification('Error', 'Failed to update order status', 'error');
-    }
-}
-// Update the showUpdateOrderStatusModal function
-async function showUpdateOrderStatusModal(orderId) {
-    try {
-        const orders = await app.db.getAll('orders');
-        const order = orders.find(o => o.id === orderId);
-        
-        if (!order) return;
-        
-        // Set current order
-        app.currentOrder = order;
-        
-        // Set current status
-        elements.updateOrderStatusSelect.value = order.status;
-        elements.updateOrderNotes.value = order.adminNotes || '';
-        
-        // Display current status
-        const currentStatusElement = document.getElementById('currentOrderStatus');
-        if (currentStatusElement) {
-            currentStatusElement.textContent = order.statusText || order.status;
-            
-            // Add appropriate status class
-            currentStatusElement.className = 'order-status';
-            switch(order.status) {
-                case 'order_placed':
-                case 'pickup_scheduled':
-                    currentStatusElement.classList.add('status-pending');
-                    break;
-                case 'picked_up':
-                case 'processing':
-                    currentStatusElement.classList.add('status-processing');
-                    break;
-                case 'completed':
-                case 'delivery_scheduled':
-                case 'delivered':
-                    currentStatusElement.classList.add('status-completed');
-                    break;
-                case 'cancelled':
-                    currentStatusElement.classList.add('status-cancelled');
-                    break;
-            }
-        }
-        
-        // Display last update time
-        const lastUpdateElement = document.getElementById('lastOrderUpdate');
-        if (lastUpdateElement) {
-            if (order.lastUpdated) {
-                lastUpdateElement.textContent = formatDateTime(order.lastUpdated);
-            } else {
-                lastUpdateElement.textContent = 'Never updated';
-            }
-        }
-        
-        // Show modal
-        elements.updateOrderStatusModal.classList.add('show');
-    } catch (error) {
-        console.error('Error showing update order status modal:', error);
-        showNotification('Error', 'Failed to load order data', 'error');
-    }
-}
-// Update the showUpdateOrderStatusModal function
-async function showUpdateOrderStatusModal(orderId) {
-    try {
-        const orders = await app.db.getAll('orders');
-        const order = orders.find(o => o.id === orderId);
-        
-        if (!order) return;
-        
-        // Set current order
-        app.currentOrder = order;
-        
-        // Set current status
-        elements.updateOrderStatusSelect.value = order.status;
-        elements.updateOrderNotes.value = order.adminNotes || '';
-        
-        // Display current status
-        const currentStatusElement = document.getElementById('currentOrderStatus');
-        if (currentStatusElement) {
-            currentStatusElement.textContent = order.statusText || order.status;
-            
-            // Add appropriate status class
-            currentStatusElement.className = 'order-status';
-            switch(order.status) {
-                case 'order_placed':
-                case 'pickup_scheduled':
-                    currentStatusElement.classList.add('status-pending');
-                    break;
-                case 'picked_up':
-                case 'processing':
-                    currentStatusElement.classList.add('status-processing');
-                    break;
-                case 'completed':
-                case 'delivery_scheduled':
-                case 'delivered':
-                    currentStatusElement.classList.add('status-completed');
-                    break;
-                case 'cancelled':
-                    currentStatusElement.classList.add('status-cancelled');
-                    break;
-            }
-        }
-        
-        // Display last update time
-        const lastUpdateElement = document.getElementById('lastOrderUpdate');
-        if (lastUpdateElement) {
-            if (order.lastUpdated) {
-                lastUpdateElement.textContent = formatDateTime(order.lastUpdated);
-            } else {
-                lastUpdateElement.textContent = 'Never updated';
-            }
-        }
-        
-        // Show modal
-        elements.updateOrderStatusModal.classList.add('show');
-    } catch (error) {
-        console.error('Error showing update order status modal:', error);
-        showNotification('Error', 'Failed to load order data', 'error');
-    }
-} 
-   </script>
+    </script>
 </body>
 </html>
