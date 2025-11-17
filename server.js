@@ -189,12 +189,15 @@ app.post('/api/orders', authenticateToken, async (req, res) => {
         // Get user info
         const user = await User.findById(req.user.id);
         
+        // Remove 'id' field from orderData to avoid conflict with MongoDB _id
+        const { id, ...orderDataWithoutId } = orderData;
+        
         const order = new Order({
-            ...orderData,
+            ...orderDataWithoutId,
             userId: req.user.id,
             userName: user.name,
             userEmail: user.email,
-            orderId: orderData.id || 'ORD' + Date.now().toString().slice(-8)
+            orderId: id || 'ORD' + Date.now().toString().slice(-8)
         });
 
         await order.save();

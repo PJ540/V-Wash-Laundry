@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>V-Wash Laundry - Online Booking System</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="api-client.js"></script>
     <style>
         :root {
             --primary-color: #3498db;
@@ -2826,9 +2827,8 @@
         // Initialize App
         async function init() {
             try {
-                // Initialize database
-                app.db = new DatabaseManager();
-                await app.db.init();
+                // Initialize API client
+                app.api = new APIClient();
                 
                 // Check if user is logged in
                 await checkAuthStatus();
@@ -3328,51 +3328,34 @@
                 const email = document.getElementById('loginEmail').value;
                 const password = document.getElementById('loginPassword').value;
                 
-                // Check if admin login
-                if (email === 'admin@vwashlaundry.co.ke' && password === 'admin123') {
-                    app.admin = {
-                        id: 'admin',
-                        name: 'Administrator',
-                        email: 'admin@vwashlaundry.co.ke'
-                    };
-                    localStorage.setItem('laundryAdmin', JSON.stringify(app.admin));
-                    showAdminPanel();
-                    elements.authModal.classList.remove('show');
-                    showNotification('Admin Login Successful', 'Welcome to the admin panel', 'success');
-                    elements.loginForm.reset();
-                    return;
-                }
-                
-                // Check user in database
-                const users = await app.db.getAll('users');
-                const user = users.find(u => u.email === email && u.password === password);
-                
-                if (user) {
-                    app.user = user;
-                    localStorage.setItem('laundryUser', JSON.stringify(user));
-                    updateUserUI();
-                    elements.authModal.classList.remove('show');
-                    showNotification('Login Successful', `Welcome back, ${user.name}!`, 'success');
-                    
-                    // Reset form
-                    elements.loginForm.reset();
-                } else {
-                    // Check admin in database
-                    const admins = await app.db.getAll('admins');
-                    const admin = admins.find(a => a.email === email && a.password === password && a.status === 'active');
-                    
-                    if (admin) {
-                        app.admin = admin;
-                        localStorage.setItem('laundryAdmin', JSON.stringify(admin));
+                // Check if admin login attempt
+                if (email.includes('admin') || email === 'admin@vwashlaundry.co.ke') {
+                    try {
+                        const response = await app.api.loginAdmin({ email, password });
+                        app.admin = response.admin;
+                        localStorage.setItem('laundryAdmin', JSON.stringify(response.admin));
                         showAdminPanel();
                         elements.authModal.classList.remove('show');
-                        showNotification('Admin Login Successful', `Welcome back, ${admin.name}!`, 'success');
-                        
-                        // Reset form
+                        showNotification('Admin Login Successful', `Welcome, ${response.admin.name}!`, 'success');
                         elements.loginForm.reset();
-                    } else {
-                        showNotification('Login Failed', 'Incorrect email or password, please try again', 'error');
+                        return;
+                    } catch (error) {
+                        showNotification('Login Failed', 'Incorrect admin credentials', 'error');
+                        return;
                     }
+                }
+                
+                // Regular user login
+                try {
+                    const response = await app.api.loginUser({ email, password });
+                    app.user = response.user;
+                    localStorage.setItem('laundryUser', JSON.stringify(response.user));
+                    updateUserUI();
+                    elements.authModal.classList.remove('show');
+                    showNotification('Login Successful', `Welcome back, ${response.user.name}!`, 'success');
+                    elements.loginForm.reset();
+                } catch (error) {
+                    showNotification('Login Failed', error.message || 'Incorrect email or password', 'error');
                 }
             } catch (error) {
                 console.error('Login error:', error);
@@ -3394,29 +3377,18 @@
                     return;
                 }
                 
-                // Check if user already exists
-                const users = await app.db.getAll('users');
-                if (users.find(u => u.email === email)) {
-                    showNotification('Registration Failed', 'This email is already registered', 'error');
-                    return;
-                }
-                
-                // Create new user
-                const newUser = {
-                    id: Date.now().toString(),
+                // Register via API
+                const response = await app.api.registerUser({
                     name,
                     email,
                     phone,
-                    password,
-                    registrationDate: new Date().toISOString()
-                };
+                    password
+                });
                 
-                // Save to database
-                await app.db.add('users', newUser);
+                // Save user data
+                app.user = response.user;
+                localStorage.setItem('laundryUser', JSON.stringify(response.user));
                 
-                // Auto login
-                app.user = newUser;
-                localStorage.setItem('laundryUser', JSON.stringify(newUser));
                 updateUserUI();
                 elements.authModal.classList.remove('show');
                 showNotification('Registration Successful', `Welcome, ${name}!`, 'success');
@@ -3425,12 +3397,13 @@
                 elements.registerForm.reset();
             } catch (error) {
                 console.error('Registration error:', error);
-                showNotification('Registration Error', 'An error occurred during registration', 'error');
+                showNotification('Registration Error', error.message || 'An error occurred during registration', 'error');
             }
         }
 
         function logout() {
             app.user = null;
+            app.api.logout();
             localStorage.removeItem('laundryUser');
             updateUserUI();
             navigateToPage('home');
@@ -3439,6 +3412,7 @@
 
         function adminLogout() {
             app.admin = null;
+            app.api.logout();
             localStorage.removeItem('laundryAdmin');
             showMainSite();
             showNotification('Logged Out', 'You have been successfully logged out of admin panel', 'info');
@@ -3504,26 +3478,14 @@
 
         async function loadAdminDashboard() {
             try {
-                // Get data from database
-                const users = await app.db.getAll('users');
-                const orders = await app.db.getAll('orders');
-                
-                // Calculate stats
-                const totalUsers = users.length;
-                const totalOrders = orders.length;
-                const totalRevenue = orders.reduce((sum, order) => sum + parseFloat(order.price || 0), 0);
-                const pendingOrders = orders.filter(order => 
-                    order.status === 'order_placed' || 
-                    order.status === 'pickup_scheduled' || 
-                    order.status === 'picked_up' || 
-                    order.status === 'processing'
-                ).length;
+                // Get stats from API
+                const stats = await app.api.getAdminStats();
                 
                 // Update stats
-                elements.totalUsersCount.textContent = totalUsers;
-                elements.totalOrdersCount.textContent = totalOrders;
-                elements.totalRevenueCount.textContent = `KSH ${totalRevenue.toFixed(2)}`;
-                elements.pendingOrdersCount.textContent = pendingOrders;
+                elements.totalUsersCount.textContent = stats.totalUsers;
+                elements.totalOrdersCount.textContent = stats.totalOrders;
+                elements.totalRevenueCount.textContent = `KSH ${stats.totalRevenue.toFixed(2)}`;
+                elements.pendingOrdersCount.textContent = stats.pendingOrders;
                 
                 // Load recent orders
                 loadRecentOrders();
@@ -3535,8 +3497,10 @@
 
         async function loadRecentOrders() {
             try {
-                const orders = await app.db.getAll('orders');
-                const users = await app.db.getAll('users');
+                const ordersResponse = await app.api.getAllOrders();
+                const orders = ordersResponse.orders;
+                const usersResponse = await app.api.getAllUsers();
+                const users = usersResponse.users;
                 
                 // Sort orders by date (newest first)
                 const sortedOrders = [...orders].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
@@ -3691,8 +3655,13 @@
 
         async function loadOrdersTable() {
             try {
-                const orders = await app.db.getAll('orders');
-                const users = await app.db.getAll('users');
+                // Get all orders from API
+                const ordersResponse = await app.api.getAllOrders();
+                const orders = ordersResponse.orders;
+                
+                // Get all users from API
+                const usersResponse = await app.api.getAllUsers();
+                const users = usersResponse.users;
                 
                 // Clear table
                 elements.ordersTable.innerHTML = '';
@@ -3731,8 +3700,8 @@
                     
                     const row = document.createElement('tr');
                     row.innerHTML = `
-                        <td>${order.id}</td>
-                        <td>${user.name}</td>
+                        <td>${order.orderId || order.id}</td>
+                        <td>${order.userName || user.name}</td>
                         <td>${order.serviceText || order.serviceType}</td>
                         <td>${order.pickupDate} ${order.pickupTime}</td>
                         <td>${order.deliveryDate} ${order.deliveryTime}</td>
@@ -3740,9 +3709,9 @@
                         <td>KSH ${order.price || 0}</td>
                         <td>
                             <div class="table-actions">
-                                <button class="btn view-order-details-btn" data-order-id="${order.id}">View</button>
-                                <button class="btn update-order-status-btn" data-order-id="${order.id}">Update</button>
-                                <button class="btn btn-danger delete-order-btn" data-order-id="${order.id}">Delete</button>
+                                <button class="btn view-order-details-btn" data-order-id="${order.orderId || order.id}">View</button>
+                                <button class="btn update-order-status-btn" data-order-id="${order.orderId || order.id}">Update</button>
+                                <button class="btn btn-danger delete-order-btn" data-order-id="${order.orderId || order.id}">Delete</button>
                             </div>
                         </td>
                     `;
@@ -3944,8 +3913,8 @@
 
         async function deleteOrder(orderId) {
             try {
-                // Delete order from database
-                await app.db.delete('orders', orderId);
+                // Delete order via API
+                await app.api.deleteOrder(orderId);
                 
                 // Reload orders table
                 loadOrdersTable();
@@ -3957,7 +3926,7 @@
                 showNotification('Order Deleted Successfully', 'Order has been deleted', 'success');
             } catch (error) {
                 console.error('Error deleting order:', error);
-                showNotification('Delete Failed', 'Failed to delete order', 'error');
+                showNotification('Delete Failed', error.message || 'Failed to delete order', 'error');
             }
         }
 
@@ -4596,16 +4565,9 @@
                         break;
                 }
                 
-                // Update order
-                app.currentOrder.status = newStatus;
-                app.currentOrder.statusText = statusText;
-                
-                if (notes) {
-                    app.currentOrder.adminNotes = notes;
-                }
-                
-                // Save to database
-                await app.db.update('orders', app.currentOrder);
+                // Update order via API
+                const orderId = app.currentOrder.orderId || app.currentOrder.id;
+                await app.api.updateOrderStatus(orderId, newStatus, statusText);
                 
                 // Close modal
                 elements.updateOrderStatusModal.classList.remove('show');
@@ -4618,7 +4580,7 @@
                 showNotification('Status Updated', `Order status has been updated to ${statusText}`, 'success');
             } catch (error) {
                 console.error('Error updating order status:', error);
-                showNotification('Error', 'Failed to update order status', 'error');
+                showNotification('Error', error.message || 'Failed to update order status', 'error');
             }
         }
 
@@ -5097,19 +5059,37 @@
 
         async function submitBooking() {
             try {
+                // Check if user is logged in
+                if (!app.user) {
+                    showNotification('Login Required', 'Please login to book a service', 'error');
+                    elements.authModal.classList.add('show');
+                    return;
+                }
+                
                 // Get the selected service details
                 const serviceType = elements.serviceType.value;
                 const serviceText = elements.serviceType.options[elements.serviceType.selectedIndex].text;
-                const services = await app.db.getAll('services');
-                const selectedService = services.find(s => s.id === serviceType);
+                
+                // Calculate price (simple pricing based on service type)
+                const itemCount = parseInt(elements.itemCount.value);
+                let basePrice = 200;
+                switch(serviceType) {
+                    case 'duvet': basePrice = 500; break;
+                    case 'beddings': basePrice = 400; break;
+                    case 'mat': basePrice = 300; break;
+                    case 'shoes': basePrice = 350; break;
+                    case 'clothes': basePrice = 200; break;
+                    case 'jacket': basePrice = 450; break;
+                    case 'teddy': basePrice = 250; break;
+                    case 'ironing': basePrice = 50; break;
+                }
                 
                 // Create order object
                 const order = {
                     id: 'ORD' + Date.now().toString().slice(-8),
-                    userId: app.user.id,
                     serviceType: serviceType,
                     serviceText: serviceText,
-                    itemCount: elements.itemCount.value,
+                    itemCount: itemCount,
                     specialInstructions: elements.specialInstructions.value || 'None',
                     pickupDate: elements.pickupDate.value,
                     pickupTime: elements.pickupTime.value,
@@ -5123,15 +5103,14 @@
                     deliveryPhone: elements.deliveryPhone.value,
                     status: 'order_placed',
                     statusText: 'Order Placed',
-                    createdAt: new Date().toISOString(),
-                    price: calculatePrice(selectedService)
+                    price: basePrice * itemCount
                 };
                 
-                // Save order to database
-                await app.db.add('orders', order);
+                // Save order via API
+                const response = await app.api.createOrder(order);
                 
                 // Set current order
-                app.currentOrder = order;
+                app.currentOrder = response.order;
                 
                 // Update confirmation page
                 elements.confirmationOrderId.textContent = order.id;
@@ -5151,7 +5130,7 @@
                 showNotification('Order Submitted Successfully', `Your order ${order.id} has been successfully submitted`, 'success');
             } catch (error) {
                 console.error('Error submitting booking:', error);
-                showNotification('Booking Error', 'Failed to submit your order', 'error');
+                showNotification('Booking Error', error.message || 'Failed to submit your order', 'error');
             }
         }
 
@@ -5246,9 +5225,14 @@
 
         async function loadOrders() {
             try {
-                // Get orders for current user
-                const orders = await app.db.getAll('orders');
-                const userOrders = orders.filter(order => order.userId === app.user.id);
+                if (!app.user) {
+                    elements.ordersList.innerHTML = '<p>Please login to view your orders</p>';
+                    return;
+                }
+                
+                // Get orders from API
+                const response = await app.api.getUserOrders();
+                const userOrders = response.orders;
                 
                 // Clear orders list
                 elements.ordersList.innerHTML = '';
