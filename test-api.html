@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Test - V-Wash Laundry</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #3498db;
+        }
+        h2 {
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        .result {
+            background-color: #ecf0f1;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 10px;
+            white-space: pre-wrap;
+            font-family: monospace;
+            font-size: 12px;
+        }
+        .success {
+            color: #27ae60;
+            font-weight: bold;
+        }
+        .error {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+        input {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 V-Wash Laundry API Test</h1>
+    
+    <div class="test-section">
+        <h2>1. Server Status</h2>
+        <button onclick="testServerStatus()">Test Server Connection</button>
+        <div id="serverResult" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>2. User Registration</h2>
+        <input type="text" id="regName" placeholder="Name" value="Test User">
+        <input type="email" id="regEmail" placeholder="Email" value="test@example.com">
+        <input type="password" id="regPassword" placeholder="Password" value="password123">
+        <input type="tel" id="regPhone" placeholder="Phone" value="+254712345678">
+        <button onclick="testRegister()">Register User</button>
+        <div id="registerResult" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>3. User Login</h2>
+        <input type="email" id="loginEmail" placeholder="Email" value="test@example.com">
+        <input type="password" id="loginPassword" placeholder="Password" value="password123">
+        <button onclick="testLogin()">Login User</button>
+        <div id="loginResult" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>4. Create Order</h2>
+        <button onclick="testCreateOrder()">Create Test Order</button>
+        <div id="orderResult" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>5. Get User Orders</h2>
+        <button onclick="testGetOrders()">Get My Orders</button>
+        <div id="getOrdersResult" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>6. Admin Login</h2>
+        <input type="email" id="adminEmail" placeholder="Admin Email" value="admin@vwashlaundry.co.ke">
+        <input type="password" id="adminPassword" placeholder="Admin Password" value="admin123">
+        <button onclick="testAdminLogin()">Login as Admin</button>
+        <div id="adminLoginResult" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>7. Get All Orders (Admin)</h2>
+        <button onclick="testGetAllOrders()">Get All Orders</button>
+        <div id="allOrdersResult" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>8. Get Admin Stats</h2>
+        <button onclick="testAdminStats()">Get Dashboard Stats</button>
+        <div id="statsResult" class="result"></div>
+    </div>
+
+    <script src="api-client.js"></script>
+    <script>
+        const api = new APIClient();
+        let testUserId = null;
+        let testOrderId = null;
+
+        function displayResult(elementId, message, isError = false) {
+            const element = document.getElementById(elementId);
+            element.innerHTML = `<span class="${isError ? 'error' : 'success'}">${isError ? '❌ ERROR' : '✅ SUCCESS'}</span>\n${message}`;
+        }
+
+        async function testServerStatus() {
+            try {
+                const response = await fetch(api.baseURL.replace('/api', '') + '/');
+                if (response.ok) {
+                    displayResult('serverResult', 'Server is running!\nURL: ' + api.baseURL);
+                } else {
+                    displayResult('serverResult', 'Server responded but with error', true);
+                }
+            } catch (error) {
+                displayResult('serverResult', 'Cannot connect to server\nMake sure server is running on http://localhost:3000\nError: ' + error.message, true);
+            }
+        }
+
+        async function testRegister() {
+            try {
+                const userData = {
+                    name: document.getElementById('regName').value,
+                    email: document.getElementById('regEmail').value,
+                    password: document.getElementById('regPassword').value,
+                    phone: document.getElementById('regPhone').value
+                };
+
+                const response = await api.registerUser(userData);
+                testUserId = response.user.id;
+                displayResult('registerResult', JSON.stringify(response, null, 2));
+            } catch (error) {
+                displayResult('registerResult', error.message, true);
+            }
+        }
+
+        async function testLogin() {
+            try {
+                const credentials = {
+                    email: document.getElementById('loginEmail').value,
+                    password: document.getElementById('loginPassword').value
+                };
+
+                const response = await api.loginUser(credentials);
+                testUserId = response.user.id;
+                displayResult('loginResult', JSON.stringify(response, null, 2));
+            } catch (error) {
+                displayResult('loginResult', error.message, true);
+            }
+        }
+
+        async function testCreateOrder() {
+            try {
+                if (!api.token) {
+                    displayResult('orderResult', 'Please login first!', true);
+                    return;
+                }
+
+                const order = {
+                    id: 'ORD' + Date.now().toString().slice(-8),
+                    serviceType: 'duvet',
+                    serviceText: 'Duvet Cleaning',
+                    itemCount: 2,
+                    specialInstructions: 'Test order',
+                    pickupDate: '2024-12-01',
+                    pickupTime: '10:00',
+                    pickupAddress: 'Test Address, Mazeras',
+                    pickupContact: 'Test User',
+                    pickupPhone: '+254712345678',
+                    deliveryDate: '2024-12-03',
+                    deliveryTime: '14:00',
+                    deliveryAddress: 'Test Address, Mazeras',
+                    deliveryContact: 'Test User',
+                    deliveryPhone: '+254712345678',
+                    status: 'order_placed',
+                    statusText: 'Order Placed',
+                    price: 1000
+                };
+
+                const response = await api.createOrder(order);
+                testOrderId = response.order.orderId;
+                displayResult('orderResult', JSON.stringify(response, null, 2));
+            } catch (error) {
+                displayResult('orderResult', error.message, true);
+            }
+        }
+
+        async function testGetOrders() {
+            try {
+                if (!api.token) {
+                    displayResult('getOrdersResult', 'Please login first!', true);
+                    return;
+                }
+
+                const response = await api.getUserOrders();
+                displayResult('getOrdersResult', JSON.stringify(response, null, 2));
+            } catch (error) {
+                displayResult('getOrdersResult', error.message, true);
+            }
+        }
+
+        async function testAdminLogin() {
+            try {
+                const credentials = {
+                    email: document.getElementById('adminEmail').value,
+                    password: document.getElementById('adminPassword').value
+                };
+
+                const response = await api.loginAdmin(credentials);
+                displayResult('adminLoginResult', JSON.stringify(response, null, 2));
+            } catch (error) {
+                displayResult('adminLoginResult', error.message, true);
+            }
+        }
+
+        async function testGetAllOrders() {
+            try {
+                if (!api.token) {
+                    displayResult('allOrdersResult', 'Please login as admin first!', true);
+                    return;
+                }
+
+                const response = await api.getAllOrders();
+                displayResult('allOrdersResult', JSON.stringify(response, null, 2));
+            } catch (error) {
+                displayResult('allOrdersResult', error.message, true);
+            }
+        }
+
+        async function testAdminStats() {
+            try {
+                if (!api.token) {
+                    displayResult('statsResult', 'Please login as admin first!', true);
+                    return;
+                }
+
+                const response = await api.getAdminStats();
+                displayResult('statsResult', JSON.stringify(response, null, 2));
+            } catch (error) {
+                displayResult('statsResult', error.message, true);
+            }
+        }
+
+        // Auto-test server on load
+        window.onload = () => {
+            testServerStatus();
+        };
+    </script>
+</body>
+</html>
