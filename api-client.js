@@ -134,6 +134,19 @@ class APIClient {
         return await this.request('/admin/users');
     }
 
+    async updateUser(userId, userData) {
+        return await this.request(`/admin/users/${userId}`, {
+            method: 'PUT',
+            body: JSON.stringify(userData)
+        });
+    }
+
+    async deleteUser(userId) {
+        return await this.request(`/admin/users/${userId}`, {
+            method: 'DELETE'
+        });
+    }
+
     // ============ SERVICE METHODS ============
 
     async getServices() {

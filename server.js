@@ -434,6 +434,69 @@ app.get('/api/admin/users', authenticateToken, async (req, res) => {
     }
 });
 
+// Update User (Admin)
+app.put('/api/admin/users/:userId', authenticateToken, async (req, res) => {
+    try {
+        const { userId } = req.params;
+        const { name, email, phone } = req.body;
+
+        // Find user
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        // Check if email is already taken by another user
+        if (email && email !== user.email) {
+            const existingUser = await User.findOne({ email });
+            if (existingUser) {
+                return res.status(400).json({ error: 'Email is already in use' });
+            }
+        }
+
+        // Update user fields
+        if (name) user.name = name;
+        if (email) user.email = email;
+        if (phone) user.phone = phone;
+
+        await user.save();
+
+        res.json({
+            message: 'User updated successfully',
+            user: {
+                id: user._id,
+                name: user.name,
+                email: user.email,
+                phone: user.phone
+            }
+        });
+    } catch (error) {
+        console.error('Update user error:', error);
+        res.status(500).json({ error: 'Failed to update user' });
+    }
+});
+
+// Delete User (Admin)
+app.delete('/api/admin/users/:userId', authenticateToken, async (req, res) => {
+    try {
+        const { userId } = req.params;
+
+        // Delete user's orders first
+        await Order.deleteMany({ userId });
+
+        // Delete user
+        const user = await User.findByIdAndDelete(userId);
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        res.json({ message: 'User and all associated data deleted successfully' });
+    } catch (error) {
+        console.error('Delete user error:', error);
+        res.status(500).json({ error: 'Failed to delete user' });
+    }
+});
+
 // ============ SERVICE ROUTES ============
 
 // Get All Services
