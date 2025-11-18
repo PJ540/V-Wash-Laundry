@@ -3956,7 +3956,7 @@
                     }
                     
                     row.innerHTML = `
-                        <td>${admin.id}</td>
+                        <td>${admin._id || admin.id}</td>
                         <td>${admin.name}</td>
                         <td>${admin.email}</td>
                         <td>${roleBadge}</td>
@@ -3964,8 +3964,8 @@
                         <td>${statusBadge}</td>
                         <td>
                             <div class="table-actions">
-                                <button class="btn edit-admin-btn" data-admin-id="${admin.id}">Edit</button>
-                                <button class="btn btn-danger delete-admin-btn" data-admin-id="${admin.id}">Delete</button>
+                                <button class="btn edit-admin-btn" data-admin-id="${admin._id || admin.id}">Edit</button>
+                                <button class="btn btn-danger delete-admin-btn" data-admin-id="${admin._id || admin.id}">Delete</button>
                             </div>
                         </td>
                     `;

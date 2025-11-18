@@ -74,10 +74,13 @@ const serviceSchema = new mongoose.Schema({
 });
 
 const adminSchema = new mongoose.Schema({
-    name: String,
+    name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
+    phone: String,
     password: { type: String, required: true },
     role: { type: String, default: 'admin' },
+    status: { type: String, default: 'active' },
+    permissions: [String],
     createdAt: { type: Date, default: Date.now }
 });
 
