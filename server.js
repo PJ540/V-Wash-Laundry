@@ -14,8 +14,8 @@ const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-this';
 app.use(cors({
     origin: [
         'http://localhost:3001',
-        'https://vwashlaundry.co.ke',
-        'https://www.vwashlaundry.co.ke'
+        'https://vwashlaundry.top',
+        'https://www.vwashlaundry.top'
     ], // Add your custom domain here
     credentials: true
 }));
@@ -434,6 +434,23 @@ app.get('/api/admin/users', authenticateToken, async (req, res) => {
     }
 });
 
+// Get Single User (Admin)
+app.get('/api/users/:userId', authenticateToken, async (req, res) => {
+    try {
+        const { userId } = req.params;
+        const user = await User.findById(userId).select('-password');
+        
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+        
+        res.json({ user });
+    } catch (error) {
+        console.error('Error fetching user:', error);
+        res.status(500).json({ error: 'Failed to fetch user' });
+    }
+});
+
 // Update User (Admin)
 app.put('/api/admin/users/:userId', authenticateToken, async (req, res) => {
     try {
@@ -510,7 +527,24 @@ app.get('/api/services', async (req, res) => {
     }
 });
 
-// Create/Update Service (Admin)
+// Get Single Service
+app.get('/api/services/:serviceId', async (req, res) => {
+    try {
+        const { serviceId } = req.params;
+        const service = await Service.findOne({ id: serviceId });
+        
+        if (!service) {
+            return res.status(404).json({ error: 'Service not found' });
+        }
+        
+        res.json({ service });
+    } catch (error) {
+        console.error('Error fetching service:', error);
+        res.status(500).json({ error: 'Failed to fetch service' });
+    }
+});
+
+// Create Service (Admin)
 app.post('/api/services', authenticateToken, async (req, res) => {
     try {
         const serviceData = req.body;
@@ -525,6 +559,183 @@ app.post('/api/services', authenticateToken, async (req, res) => {
     } catch (error) {
         console.error('Error saving service:', error);
         res.status(500).json({ error: 'Failed to save service' });
+    }
+});
+
+// Update Service (Admin)
+app.put('/api/services/:serviceId', authenticateToken, async (req, res) => {
+    try {
+        const { serviceId } = req.params;
+        const updateData = req.body;
+        
+        const service = await Service.findOneAndUpdate(
+            { id: serviceId },
+            updateData,
+            { new: true }
+        );
+
+        if (!service) {
+            return res.status(404).json({ error: 'Service not found' });
+        }
+
+        res.json({ message: 'Service updated successfully', service });
+    } catch (error) {
+        console.error('Error updating service:', error);
+        res.status(500).json({ error: 'Failed to update service' });
+    }
+});
+
+// Delete Service (Admin)
+app.delete('/api/services/:serviceId', authenticateToken, async (req, res) => {
+    try {
+        const { serviceId } = req.params;
+        
+        const service = await Service.findOneAndDelete({ id: serviceId });
+
+        if (!service) {
+            return res.status(404).json({ error: 'Service not found' });
+        }
+
+        res.json({ message: 'Service deleted successfully' });
+    } catch (error) {
+        console.error('Error deleting service:', error);
+        res.status(500).json({ error: 'Failed to delete service' });
+    }
+});
+
+// ============ ADMIN MANAGEMENT ROUTES ============
+
+// Get All Admins
+app.get('/api/admin/admins', authenticateToken, async (req, res) => {
+    try {
+        const admins = await Admin.find().select('-password').sort({ createdAt: -1 });
+        res.json({ admins });
+    } catch (error) {
+        console.error('Error fetching admins:', error);
+        res.status(500).json({ error: 'Failed to fetch admins' });
+    }
+});
+
+// Get Single Admin
+app.get('/api/admin/admins/:adminId', authenticateToken, async (req, res) => {
+    try {
+        const { adminId } = req.params;
+        const admin = await Admin.findById(adminId).select('-password');
+        
+        if (!admin) {
+            return res.status(404).json({ error: 'Admin not found' });
+        }
+        
+        res.json({ admin });
+    } catch (error) {
+        console.error('Error fetching admin:', error);
+        res.status(500).json({ error: 'Failed to fetch admin' });
+    }
+});
+
+// Create Admin
+app.post('/api/admin/admins', authenticateToken, async (req, res) => {
+    try {
+        const { name, email, phone, password, role } = req.body;
+
+        // Check if admin already exists
+        const existingAdmin = await Admin.findOne({ email });
+        if (existingAdmin) {
+            return res.status(400).json({ error: 'Admin with this email already exists' });
+        }
+
+        // Hash password
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        // Create new admin
+        const admin = new Admin({
+            name,
+            email,
+            phone,
+            password: hashedPassword,
+            role: role || 'admin',
+            status: 'active'
+        });
+
+        await admin.save();
+
+        res.json({
+            message: 'Admin created successfully',
+            admin: {
+                id: admin._id,
+                name: admin.name,
+                email: admin.email,
+                phone: admin.phone,
+                role: admin.role,
+                status: admin.status
+            }
+        });
+    } catch (error) {
+        console.error('Error creating admin:', error);
+        res.status(500).json({ error: 'Failed to create admin' });
+    }
+});
+
+// Update Admin
+app.put('/api/admin/admins/:adminId', authenticateToken, async (req, res) => {
+    try {
+        const { adminId } = req.params;
+        const { name, email, phone, role, status } = req.body;
+
+        const admin = await Admin.findById(adminId);
+        if (!admin) {
+            return res.status(404).json({ error: 'Admin not found' });
+        }
+
+        // Check if email is already taken by another admin
+        if (email && email !== admin.email) {
+            const existingAdmin = await Admin.findOne({ email });
+            if (existingAdmin) {
+                return res.status(400).json({ error: 'Email is already in use' });
+            }
+        }
+
+        // Update admin fields
+        if (name) admin.name = name;
+        if (email) admin.email = email;
+        if (phone) admin.phone = phone;
+        if (role) admin.role = role;
+        if (status) admin.status = status;
+
+        await admin.save();
+
+        res.json({
+            message: 'Admin updated successfully',
+            admin: {
+                id: admin._id,
+                name: admin.name,
+                email: admin.email,
+                phone: admin.phone,
+                role: admin.role,
+                status: admin.status
+            }
+        });
+    } catch (error) {
+        console.error('Error updating admin:', error);
+        res.status(500).json({ error: 'Failed to update admin' });
+    }
+});
+
+// Delete Admin
+app.delete('/api/admin/admins/:adminId', authenticateToken, async (req, res) => {
+    try {
+        const { adminId } = req.params;
+        
+        const admin = await Admin.findByIdAndDelete(adminId);
+
+        if (!admin) {
+            return res.status(404).json({ error: 'Admin not found' });
+        }
+
+        res.json({ message: 'Admin deleted successfully' });
+    } catch (error) {
+        console.error('Error deleting admin:', error);
+        res.status(500).json({ error: 'Failed to delete admin' });
     }
 });
 

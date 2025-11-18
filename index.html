@@ -2309,7 +2309,8 @@
     </div>
 
     <script>
-        // Database Manager
+        // Database Manager - DEPRECATED: Now using backend API instead of IndexedDB
+        /* COMMENTED OUT - NO LONGER NEEDED
         class DatabaseManager {
             constructor() {
                 this.dbName = 'freshlaundry_db';
@@ -2636,6 +2637,7 @@
                 });
             }
         }
+        END OF COMMENTED OUT DatabaseManager CLASS */
 
         // App State
         const app = {
@@ -2649,7 +2651,17 @@
             users: [],
             services: [],
             admins: [],
-            db: null
+            db: {
+                // Stub methods to prevent errors in non-critical functions
+                getAll: async () => { console.warn('IndexedDB disabled - using API instead'); return []; },
+                add: async () => { console.warn('IndexedDB disabled - using API instead'); },
+                update: async () => { console.warn('IndexedDB disabled - using API instead'); },
+                delete: async () => { console.warn('IndexedDB disabled - using API instead'); },
+                exportAllData: async () => { console.warn('Export disabled'); return {}; },
+                importData: async () => { console.warn('Import disabled'); },
+                clearAllData: async () => { console.warn('Clear disabled'); },
+                getDatabaseSize: async () => 'N/A (Cloud DB)'
+            }
         };
 
         // DOM Elements
@@ -2896,40 +2908,37 @@
         // Update database status
         async function updateDatabaseStatus() {
             try {
-                const dbSize = await app.db.getDatabaseSize();
-                elements.dbSize.textContent = dbSize;
+                // Get stats from API
+                const statsResponse = await apiClient.get('/api/admin/stats');
+                
+                elements.dbSize.textContent = 'N/A (Cloud DB)';
                 
                 // Update database stats
-                const users = await app.db.getAll('users');
-                const orders = await app.db.getAll('orders');
-                const addresses = await app.db.getAll('addresses');
-                const services = await app.db.getAll('services');
-                const admins = await app.db.getAll('admins');
-                
                 elements.dbStats.innerHTML = `
                     <div class="summary-row">
                         <span class="detail-label">Users:</span>
-                        <span>${users.length}</span>
+                        <span>${statsResponse.totalUsers || 0}</span>
                     </div>
                     <div class="summary-row">
                         <span class="detail-label">Orders:</span>
-                        <span>${orders.length}</span>
+                        <span>${statsResponse.totalOrders || 0}</span>
                     </div>
                     <div class="summary-row">
                         <span class="detail-label">Addresses:</span>
-                        <span>${addresses.length}</span>
+                        <span>N/A</span>
                     </div>
                     <div class="summary-row">
                         <span class="detail-label">Services:</span>
-                        <span>${services.length}</span>
+                        <span>N/A</span>
                     </div>
                     <div class="summary-row">
                         <span class="detail-label">Admins:</span>
-                        <span>${admins.length}</span>
+                        <span>N/A</span>
                     </div>
                 `;
             } catch (error) {
                 console.error('Error updating database status:', error);
+                elements.dbSize.textContent = 'Error';
             }
         }
 
@@ -3854,7 +3863,8 @@
 
         async function loadServicesTable() {
             try {
-                const services = await app.db.getAll('services');
+                const response = await apiClient.get('/api/services');
+                const services = response.services || [];
                 
                 // Clear table
                 elements.servicesTable.innerHTML = '';
@@ -3907,7 +3917,8 @@
 
         async function loadAdminsTable() {
             try {
-                const admins = await app.db.getAll('admins');
+                const response = await apiClient.get('/api/admin/admins');
+                const admins = response.admins || [];
                 
                 // Clear table
                 elements.adminsTable.innerHTML = '';
@@ -3986,24 +3997,8 @@
         // Delete Functions
         async function deleteUser(userId) {
             try {
-                // First, delete all orders for this user
-                const orders = await app.db.getAll('orders');
-                const userOrders = orders.filter(order => order.userId === userId);
-                
-                for (const order of userOrders) {
-                    await app.db.delete('orders', order.id);
-                }
-                
-                // Delete all addresses for this user
-                const addresses = await app.db.getAll('addresses');
-                const userAddresses = addresses.filter(address => address.userId === userId);
-                
-                for (const address of userAddresses) {
-                    await app.db.delete('addresses', address.id);
-                }
-                
-                // Finally, delete the user
-                await app.db.delete('users', userId);
+                // Delete user via API (backend will handle cascading deletes)
+                await apiClient.delete(`/api/admin/users/${userId}`);
                 
                 // Reload users table
                 loadUsersTable();
@@ -4037,8 +4032,8 @@
 
         async function deleteService(serviceId) {
             try {
-                // Delete service from database
-                await app.db.delete('services', serviceId);
+                // Delete service via API
+                await apiClient.delete(`/api/services/${serviceId}`);
                 
                 // Reload services table
                 loadServicesTable();
@@ -4056,8 +4051,8 @@
 
         async function deleteAdmin(adminId) {
             try {
-                // Delete admin from database
-                await app.db.delete('admins', adminId);
+                // Delete admin via API
+                await apiClient.delete(`/api/admin/admins/${adminId}`);
                 
                 // Reload admins table
                 loadAdminsTable();
@@ -4084,9 +4079,9 @@
 
         async function showEditServiceModal(serviceId) {
             try {
-                // Get service data
-                const services = await app.db.getAll('services');
-                const service = services.find(s => s.id === serviceId);
+                // Get service data from API
+                const response = await apiClient.get(`/api/services/${serviceId}`);
+                const service = response.service;
                 
                 if (!service) return;
                 
@@ -4127,8 +4122,8 @@
                     image: image || 'default-service.jpg'
                 };
                 
-                // Save to database
-                await app.db.add('services', newService);
+                // Save to database via API
+                await apiClient.post('/api/services', newService);
                 
                 // Reset form
                 document.getElementById('addServiceForm').reset();
@@ -4162,20 +4157,13 @@
                     return;
                 }
                 
-                // Find service in database
-                const services = await app.db.getAll('services');
-                const service = services.find(s => s.id === serviceId);
-                
-                if (!service) return;
-                
-                // Update service
-                service.name = name;
-                service.description = description;
-                service.price = parseFloat(price);
-                service.image = image || service.image || 'default-service.jpg';
-                
-                // Save to database
-                await app.db.update('services', service);
+                // Update service via API
+                await apiClient.put(`/api/services/${serviceId}`, {
+                    name,
+                    description,
+                    price: parseFloat(price),
+                    image: image || 'default-service.jpg'
+                });
                 
                 // Reset form
                 document.getElementById('editServiceForm').reset();
@@ -4198,14 +4186,14 @@
         // User Management Functions
         async function showEditUserModal(userId) {
             try {
-                // Get user data
-                const users = await app.db.getAll('users');
-                const user = users.find(u => u.id === userId);
+                // Get user data from API
+                const response = await apiClient.get(`/api/users/${userId}`);
+                const user = response.user;
                 
                 if (!user) return;
                 
                 // Fill form with user data
-                document.getElementById('editUserId').value = user.id;
+                document.getElementById('editUserId').value = user._id;
                 document.getElementById('editUserName').value = user.name;
                 document.getElementById('editUserEmail').value = user.email;
                 document.getElementById('editUserPhone').value = user.phone;
@@ -4231,19 +4219,12 @@
                     return;
                 }
                 
-                // Find user in database
-                const users = await app.db.getAll('users');
-                const user = users.find(u => u.id === userId);
-                
-                if (!user) return;
-                
-                // Update user
-                user.name = name;
-                user.email = email;
-                user.phone = phone;
-                
-                // Save to database
-                await app.db.update('users', user);
+                // Update user via API
+                await apiClient.put(`/api/admin/users/${userId}`, {
+                    name,
+                    email,
+                    phone
+                });
                 
                 // Reset form
                 document.getElementById('editUserForm').reset();
@@ -4283,28 +4264,18 @@
                     return;
                 }
                 
-                // Check if admin already exists
-                const admins = await app.db.getAll('admins');
-                if (admins.find(a => a.email === email)) {
-                    showNotification('Admin Already Exists', 'An admin with this email already exists', 'error');
-                    return;
-                }
-                
-                // Create new admin
+                // Create new admin via API
                 const newAdmin = {
-                    id: Date.now().toString(),
                     name,
                     email,
                     phone,
                     password,
                     role,
                     permissions,
-                    status: 'active',
-                    createdAt: new Date().toISOString()
+                    status: 'active'
                 };
                 
-                // Save to database
-                await app.db.add('admins', newAdmin);
+                await apiClient.post('/api/admin/admins', newAdmin);
                 
                 // Reset form
                 elements.addAdminForm.reset();
@@ -4317,16 +4288,20 @@
                 showNotification('Admin Added Successfully', `${name} has been added as an admin`, 'success');
             } catch (error) {
                 console.error('Error adding admin:', error);
-                showNotification('Add Failed', 'Failed to add admin', 'error');
+                const errorMsg = error.response?.data?.error || 'Failed to add admin';
+                showNotification('Add Failed', errorMsg, 'error');
             }
         }
 
         async function editAdmin(adminId) {
             try {
-                const admins = await app.db.getAll('admins');
-                const admin = admins.find(a => a.id === adminId);
+                const response = await apiClient.get(`/api/admin/admins/${adminId}`);
+                const admin = response.admin;
                 
                 if (!admin) return;
+                
+                // Store admin ID for update
+                document.getElementById('editAdminId').value = admin._id;
                 
                 // Fill form with admin data
                 document.getElementById('editAdminName').value = admin.name;
@@ -4335,13 +4310,14 @@
                 document.getElementById('editAdminRole').value = admin.role;
                 document.getElementById('editAdminStatus').value = admin.status;
                 
-                // Set permissions checkboxes
-                document.getElementById('editPermUsers').checked = admin.permissions.includes('users');
-                document.getElementById('editPermOrders').checked = admin.permissions.includes('orders');
-                document.getElementById('editPermServices').checked = admin.permissions.includes('services');
-                document.getElementById('editPermAdmins').checked = admin.permissions.includes('admins');
-                document.getElementById('editPermDatabase').checked = admin.permissions.includes('database');
-                document.getElementById('editPermSettings').checked = admin.permissions.includes('settings');
+                // Set permissions checkboxes if they exist
+                const permissions = admin.permissions || [];
+                document.getElementById('editPermUsers').checked = permissions.includes('users');
+                document.getElementById('editPermOrders').checked = permissions.includes('orders');
+                document.getElementById('editPermServices').checked = permissions.includes('services');
+                document.getElementById('editPermAdmins').checked = permissions.includes('admins');
+                document.getElementById('editPermDatabase').checked = permissions.includes('database');
+                document.getElementById('editPermSettings').checked = permissions.includes('settings');
                 
                 // Show modal
                 elements.editAdminModal.classList.add('show');
@@ -4378,27 +4354,22 @@
                     return;
                 }
                 
-                // Find admin in database
-                const admins = await app.db.getAll('admins');
-                const admin = admins.find(a => a.id === adminId);
+                // Update admin via API
+                const updateData = {
+                    name,
+                    email,
+                    phone,
+                    role,
+                    status,
+                    permissions
+                };
                 
-                if (!admin) return;
-                
-                // Update admin
-                admin.name = name;
-                admin.email = email;
-                admin.phone = phone;
-                admin.role = role;
-                admin.status = status;
-                admin.permissions = permissions;
-                
-                // Update password if provided
+                // Add password if provided
                 if (password) {
-                    admin.password = password;
+                    updateData.password = password;
                 }
                 
-                // Save to database
-                await app.db.update('admins', admin);
+                await apiClient.put(`/api/admin/admins/${adminId}`, updateData);
                 
                 // Reset form
                 elements.editAdminForm.reset();
@@ -4411,7 +4382,8 @@
                 showNotification('Admin Updated Successfully', `${name}'s information has been updated`, 'success');
             } catch (error) {
                 console.error('Error updating admin:', error);
-                showNotification('Update Failed', 'Failed to update admin', 'error');
+                const errorMsg = error.response?.data?.error || 'Failed to update admin';
+                showNotification('Update Failed', errorMsg, 'error');
             }
         }
 
@@ -4563,13 +4535,14 @@
 
         async function showUserDetails(userId) {
             try {
-                const users = await app.db.getAll('users');
-                const orders = await app.db.getAll('orders');
+                const userResponse = await apiClient.get(`/api/users/${userId}`);
+                const user = userResponse.user;
                 
-                const user = users.find(u => u.id === userId);
                 if (!user) return;
                 
-                const userOrders = orders.filter(o => o.userId === userId);
+                // Get user's orders
+                const ordersResponse = await apiClient.get(`/api/orders/user/${userId}`);
+                const userOrders = ordersResponse.orders || [];
                 const totalSpent = userOrders.reduce((sum, order) => sum + parseFloat(order.price || 0), 0);
                 
                 // Update modal content
@@ -4577,7 +4550,7 @@
                     <div class="order-details">
                         <div class="detail-row">
                             <span class="detail-label">User ID:</span>
-                            <span>${user.id}</span>
+                            <span>${user._id}</span>
                         </div>
                         <div class="detail-row">
                             <span class="detail-label">Name:</span>
@@ -4593,7 +4566,7 @@
                         </div>
                         <div class="detail-row">
                             <span class="detail-label">Registration Date:</span>
-                            <span>${formatDate(user.registrationDate)}</span>
+                            <span>${formatDate(user.createdAt)}</span>
                         </div>
                         <div class="detail-row">
                             <span class="detail-label">Total Orders:</span>
@@ -4692,25 +4665,8 @@
         // Database Management Functions
         async function exportDatabase() {
             try {
-                showNotification('Exporting', 'Preparing data for export...', 'info');
-                
-                const data = await app.db.exportAllData();
-                const dataStr = JSON.stringify(data, null, 2);
-                const dataBlob = new Blob([dataStr], { type: 'application/json' });
-                
-                // Create download link
-                const url = URL.createObjectURL(dataBlob);
-                const link = document.createElement('a');
-                link.href = url;
-                link.download = `vwashlaundry_backup_${new Date().toISOString().split('T')[0]}.json`;
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-                
-                // Clean up
-                URL.revokeObjectURL(url);
-                
-                showNotification('Export Successful', 'Database has been exported successfully', 'success');
+                showNotification('Feature Disabled', 'Export feature is currently disabled. Data is stored in cloud database.', 'info');
+                return;
             } catch (error) {
                 console.error('Error exporting database:', error);
                 showNotification('Export Failed', 'Failed to export database', 'error');
