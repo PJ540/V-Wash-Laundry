@@ -11,7 +11,14 @@ const PORT = process.env.PORT || 3000;
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-this';
 
 // Middleware
-app.use(cors());
+app.use(cors({
+    origin: [
+        'http://localhost:3001',
+        'https://vwashlaundry.co.ke',
+        'https://www.vwashlaundry.co.ke'
+    ], // Add your custom domain here
+    credentials: true
+}));
 app.use(express.json());
 app.use(express.static('.')); // Serve static files from current directory
 
@@ -176,6 +183,88 @@ app.post('/api/users/login', async (req, res) => {
     } catch (error) {
         console.error('Login error:', error);
         res.status(500).json({ error: 'Login failed' });
+    }
+});
+
+// Change Password
+app.post('/api/users/change-password', authenticateToken, async (req, res) => {
+    try {
+        const { currentPassword, newPassword } = req.body;
+
+        // Validate inputs
+        if (!currentPassword || !newPassword) {
+            return res.status(400).json({ error: 'Current password and new password are required' });
+        }
+
+        // Check password length
+        if (newPassword.length < 6) {
+            return res.status(400).json({ error: 'New password must be at least 6 characters long' });
+        }
+
+        // Find user
+        const user = await User.findById(req.user.id);
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        // Verify current password
+        const validPassword = await bcrypt.compare(currentPassword, user.password);
+        if (!validPassword) {
+            return res.status(401).json({ error: 'Current password is incorrect' });
+        }
+
+        // Hash new password
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+        // Update password
+        user.password = hashedPassword;
+        await user.save();
+
+        res.json({ message: 'Password changed successfully' });
+    } catch (error) {
+        console.error('Change password error:', error);
+        res.status(500).json({ error: 'Failed to change password' });
+    }
+});
+
+// Update Profile
+app.put('/api/users/profile', authenticateToken, async (req, res) => {
+    try {
+        const { name, email, phone } = req.body;
+
+        // Find user
+        const user = await User.findById(req.user.id);
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        // Check if email is already taken by another user
+        if (email && email !== user.email) {
+            const existingUser = await User.findOne({ email });
+            if (existingUser) {
+                return res.status(400).json({ error: 'Email is already in use' });
+            }
+        }
+
+        // Update user fields
+        if (name) user.name = name;
+        if (email) user.email = email;
+        if (phone) user.phone = phone;
+
+        await user.save();
+
+        res.json({
+            message: 'Profile updated successfully',
+            user: {
+                id: user._id,
+                name: user.name,
+                email: user.email,
+                phone: user.phone
+            }
+        });
+    } catch (error) {
+        console.error('Update profile error:', error);
+        res.status(500).json({ error: 'Failed to update profile' });
     }
 });
 
@@ -374,6 +463,11 @@ app.post('/api/services', authenticateToken, async (req, res) => {
         console.error('Error saving service:', error);
         res.status(500).json({ error: 'Failed to save service' });
     }
+});
+
+// Serve INDEX.HTML for root route
+app.get('/', (req, res) => {
+    res.sendFile('INDEX.HTML', { root: '.' });
 });
 
 // Initialize default admin account

@@ -1,10 +1,10 @@
 // API Client for V-Wash Laundry Backend
 class APIClient {
     constructor() {
-        // Change this to your deployed backend URL in production
+        // Automatically use the correct API URL based on environment
         this.baseURL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
             ? 'http://localhost:3001/api'
-            : '/api'; // Use relative path when deployed
+            : '/api'; // Use relative path - works with custom domain
         
         this.token = localStorage.getItem('authToken');
     }
@@ -144,6 +144,22 @@ class APIClient {
         return await this.request('/services', {
             method: 'POST',
             body: JSON.stringify(serviceData)
+        });
+    }
+
+    // ============ USER PROFILE METHODS ============
+
+    async changePassword(currentPassword, newPassword) {
+        return await this.request('/users/change-password', {
+            method: 'POST',
+            body: JSON.stringify({ currentPassword, newPassword })
+        });
+    }
+
+    async updateProfile(profileData) {
+        return await this.request('/users/profile', {
+            method: 'PUT',
+            body: JSON.stringify(profileData)
         });
     }
 

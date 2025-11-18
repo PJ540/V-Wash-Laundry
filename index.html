@@ -1633,6 +1633,36 @@
             </div>
         </div>
 
+        <!-- Change Password Modal -->
+        <div class="modal" id="changePasswordModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">Change Password</h3>
+                    <button class="modal-close" id="closeChangePasswordModal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <form id="changePasswordForm">
+                        <div class="form-group">
+                            <label for="currentPassword">Current Password</label>
+                            <input type="password" class="form-control" id="currentPassword" placeholder="Enter current password" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="newPassword">New Password</label>
+                            <input type="password" class="form-control" id="newPassword" placeholder="Enter new password" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="confirmNewPassword">Confirm New Password</label>
+                            <input type="password" class="form-control" id="confirmNewPassword" placeholder="Confirm new password" required>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" id="cancelChangePasswordBtn">Cancel</button>
+                    <button class="btn" id="savePasswordBtn">Change Password</button>
+                </div>
+            </div>
+        </div>
+
         <!-- Notification -->
         <div class="notification" id="notification">
             <div class="notification-icon">
@@ -2727,6 +2757,14 @@
             closeUserOrderDetailsModal: document.getElementById('closeUserOrderDetailsModal'),
             closeUserOrderDetailsBtn: document.getElementById('closeUserOrderDetailsBtn'),
             
+            // Change Password Modal
+            changePasswordModal: document.getElementById('changePasswordModal'),
+            closeChangePasswordModal: document.getElementById('closeChangePasswordModal'),
+            changePasswordForm: document.getElementById('changePasswordForm'),
+            cancelChangePasswordBtn: document.getElementById('cancelChangePasswordBtn'),
+            savePasswordBtn: document.getElementById('savePasswordBtn'),
+            changePasswordBtn: document.getElementById('changePasswordBtn'),
+            
             // Admin Panel
             adminLogoutBtn: document.getElementById('adminLogoutBtn'),
             adminMenuItems: document.querySelectorAll('.admin-menu-item'),
@@ -2846,14 +2884,8 @@
                 dayAfterTomorrow.setDate(dayAfterTomorrow.getDate() + 1);
                 elements.deliveryDate.min = dayAfterTomorrow.toISOString().split('T')[0];
                 
-                // Load sample data if needed
-                await loadSampleData();
-                
-                // Update user services
+                // Update user services (loads hardcoded services)
                 updateUserServices();
-                
-                // Update database status
-                updateDatabaseStatus();
             } catch (error) {
                 console.error('Error initializing app:', error);
                 showNotification('Initialization Error', 'Failed to initialize the application', 'error');
@@ -2903,6 +2935,11 @@
         // Check Authentication Status
         async function checkAuthStatus() {
             try {
+                // Check if API client exists
+                if (!app.api) {
+                    app.api = new APIClient();
+                }
+                
                 const savedUser = localStorage.getItem('laundryUser');
                 if (savedUser) {
                     app.user = JSON.parse(savedUser);
@@ -3077,6 +3114,33 @@
             elements.profileForm.addEventListener('submit', (e) => {
                 e.preventDefault();
                 updateProfile();
+            });
+            
+            // Change Password Button
+            if (elements.changePasswordBtn) {
+                elements.changePasswordBtn.addEventListener('click', () => {
+                    elements.changePasswordModal.classList.add('show');
+                });
+            }
+            
+            // Change Password Modal
+            elements.closeChangePasswordModal.addEventListener('click', () => {
+                elements.changePasswordModal.classList.remove('show');
+                elements.changePasswordForm.reset();
+            });
+            
+            elements.cancelChangePasswordBtn.addEventListener('click', () => {
+                elements.changePasswordModal.classList.remove('show');
+                elements.changePasswordForm.reset();
+            });
+            
+            elements.savePasswordBtn.addEventListener('click', () => {
+                changePassword();
+            });
+            
+            elements.changePasswordForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                changePassword();
             });
             
             elements.addAddressBtn.addEventListener('click', () => {
@@ -3592,7 +3656,8 @@
 
         async function loadUsersTable() {
             try {
-                const users = await app.db.getAll('users');
+                const usersResponse = await app.api.getAllUsers();
+                const users = usersResponse.users;
                 
                 // Clear table
                 elements.usersTable.innerHTML = '';
@@ -4312,13 +4377,13 @@
 
         async function showOrderDetails(orderId) {
             try {
-                const orders = await app.db.getAll('orders');
-                const users = await app.db.getAll('users');
+                const ordersResponse = await app.api.getAllOrders();
+                const usersResponse = await app.api.getAllUsers();
                 
-                const order = orders.find(o => o.id === orderId);
+                const order = ordersResponse.orders.find(o => (o.orderId || o.id) === orderId);
                 if (!order) return;
                 
-                const user = users.find(u => u.id === order.userId) || { name: 'Unknown User' };
+                const user = usersResponse.users.find(u => u._id === order.userId) || { name: order.userName || 'Unknown User', email: order.userEmail || '' };
                 
                 // Update modal content
                 elements.orderDetailsContent.innerHTML = `
@@ -4510,8 +4575,8 @@
 
         async function showUpdateOrderStatusModal(orderId) {
             try {
-                const orders = await app.db.getAll('orders');
-                const order = orders.find(o => o.id === orderId);
+                const ordersResponse = await app.api.getAllOrders();
+                const order = ordersResponse.orders.find(o => (o.orderId || o.id) === orderId);
                 
                 if (!order) return;
                 
@@ -4769,7 +4834,65 @@
         // Service Management Functions
         async function updateUserServices() {
             try {
-                const services = await app.db.getAll('services');
+                // Hardcoded services (can be replaced with API call later)
+                const services = [
+                    {
+                        id: 'duvet',
+                        name: 'Duvet (all sizes)',
+                        description: 'Professional cleaning for all sizes of duvets using specialized equipment for thorough cleaning.',
+                        price: 500,
+                        image: 'duvet.jpeg'
+                    },
+                    {
+                        id: 'beddings',
+                        name: 'Beddings',
+                        description: 'Complete bedding cleaning including sheets, pillowcases, and blankets.',
+                        price: 400,
+                        image: 'beddings.jpeg'
+                    },
+                    {
+                        id: 'mat',
+                        name: 'Mat (fluffy & hard)',
+                        description: 'Specialized cleaning for all types of mats, from fluffy to hard varieties.',
+                        price: 300,
+                        image: 'carpet.jpeg'
+                    },
+                    {
+                        id: 'shoes',
+                        name: 'Shoes',
+                        description: 'Professional cleaning and care for all types of shoes.',
+                        price: 350,
+                        image: 'shoes.jpeg'
+                    },
+                    {
+                        id: 'clothes',
+                        name: 'Clothes',
+                        description: 'Professional cleaning for all types of clothes.',
+                        price: 200,
+                        image: 'clothes.jpeg'
+                    },
+                    {
+                        id: 'jacket',
+                        name: 'Jacket',
+                        description: 'Specialized cleaning for jackets of all materials.',
+                        price: 450,
+                        image: 'jackets.jpeg'
+                    },
+                    {
+                        id: 'teddy',
+                        name: 'Teddy bear (Dolly)',
+                        description: 'Gentle cleaning for stuffed animals and teddy bears.',
+                        price: 250,
+                        image: 'teddybear.jpeg'
+                    },
+                    {
+                        id: 'ironing',
+                        name: 'Ironing',
+                        description: 'Professional ironing service for all types of clothes.',
+                        price: 50,
+                        image: 'ironing.jpeg'
+                    }
+                ];
                 
                 // Update services on home page
                 updateServiceCards('homeServicesGrid', services);
@@ -4869,10 +4992,13 @@
                 const smsNotifications = document.getElementById('smsNotifications').checked;
                 const promoNotifications = document.getElementById('promoNotifications').checked;
                 
-                // Save settings to database
-                await app.db.update('settings', { key: 'emailNotifications', value: emailNotifications });
-                await app.db.update('settings', { key: 'smsNotifications', value: smsNotifications });
-                await app.db.update('settings', { key: 'promoNotifications', value: promoNotifications });
+                // Save settings to localStorage
+                const settings = {
+                    emailNotifications,
+                    smsNotifications,
+                    promoNotifications
+                };
+                localStorage.setItem('userSettings_' + app.user.id, JSON.stringify(settings));
                 
                 showNotification('Settings Saved', 'Your settings have been updated successfully', 'success');
             } catch (error) {
@@ -5266,7 +5392,7 @@
                     
                     orderCard.innerHTML = `
                         <div class="order-header">
-                            <div class="order-id">Order Number: ${order.id}</div>
+                            <div class="order-id">Order Number: ${order.orderId || order.id}</div>
                             <div class="order-status ${statusClass}">${order.statusText}</div>
                         </div>
                         <div class="order-details">
@@ -5292,8 +5418,8 @@
                             </div>
                         </div>
                         <div class="order-actions">
-                            <button class="btn view-order-btn" data-order-id="${order.id}">View Details</button>
-                            ${order.status === 'order_placed' ? `<button class="btn cancel-order-btn" data-order-id="${order.id}">Cancel Order</button>` : ''}
+                            <button class="btn view-order-btn" data-order-id="${order.orderId || order.id}">View Details</button>
+                            ${order.status === 'order_placed' ? `<button class="btn cancel-order-btn" data-order-id="${order.orderId || order.id}">Cancel Order</button>` : ''}
                         </div>
                     `;
                     
@@ -5323,39 +5449,31 @@
 
         async function viewOrder(orderId) {
             try {
-                const orders = await app.db.getAll('orders');
-                const order = orders.find(o => o.id === orderId);
+                const response = await app.api.getUserOrders();
+                const order = response.orders.find(o => (o.orderId || o.id) === orderId);
                 
                 if (order) {
                     showUserOrderDetails(order);
                 }
             } catch (error) {
                 console.error('Error viewing order:', error);
+                showNotification('Error', 'Failed to load order details', 'error');
             }
         }
 
         async function cancelOrder(orderId) {
             try {
-                const orders = await app.db.getAll('orders');
-                const order = orders.find(o => o.id === orderId);
+                // Update order status to cancelled via API
+                await app.api.updateOrderStatus(orderId, 'cancelled', 'Cancelled');
                 
-                if (order) {
-                    // Update order status
-                    order.status = 'cancelled';
-                    order.statusText = 'Cancelled';
-                    
-                    // Save to database
-                    await app.db.update('orders', order);
-                    
-                    // Reload orders
-                    loadOrders();
-                    
-                    // Show notification
-                    showNotification('Cancellation Successful', 'Order has been cancelled', 'success');
-                }
+                // Reload orders
+                loadOrders();
+                
+                // Show notification
+                showNotification('Cancellation Successful', 'Order has been cancelled', 'success');
             } catch (error) {
                 console.error('Error cancelling order:', error);
-                showNotification('Cancellation Failed', 'Failed to cancel order', 'error');
+                showNotification('Cancellation Failed', error.message || 'Failed to cancel order', 'error');
             }
         }
 
@@ -5365,33 +5483,74 @@
                 const email = document.getElementById('profileEmail').value;
                 const phone = document.getElementById('profilePhone').value;
                 
-                // Update user in app state
-                app.user.name = name;
-                app.user.email = email;
-                app.user.phone = phone;
+                // Call API to update profile
+                const response = await app.api.updateProfile({ name, email, phone });
+                
+                // Update user in app state with response data
+                app.user = response.user;
                 
                 // Update user in localStorage
                 localStorage.setItem('laundryUser', JSON.stringify(app.user));
-                
-                // Update user in database
-                await app.db.update('users', app.user);
                 
                 // Update UI
                 updateUserUI();
                 
                 // Show notification
-                showNotification('Update Successful', 'Your profile information has been updated', 'success');
+                showNotification('Update Successful', 'Your profile information has been updated successfully', 'success');
             } catch (error) {
                 console.error('Error updating profile:', error);
-                showNotification('Update Failed', 'Failed to update profile', 'error');
+                showNotification('Update Failed', error.message || 'Failed to update profile', 'error');
+            }
+        }
+
+        async function changePassword() {
+            try {
+                const currentPassword = document.getElementById('currentPassword').value;
+                const newPassword = document.getElementById('newPassword').value;
+                const confirmNewPassword = document.getElementById('confirmNewPassword').value;
+                
+                // Validate inputs
+                if (!currentPassword || !newPassword || !confirmNewPassword) {
+                    showNotification('Validation Error', 'Please fill in all password fields', 'error');
+                    return;
+                }
+                
+                // Check if new passwords match
+                if (newPassword !== confirmNewPassword) {
+                    showNotification('Validation Error', 'New passwords do not match', 'error');
+                    return;
+                }
+                
+                // Check password length
+                if (newPassword.length < 6) {
+                    showNotification('Validation Error', 'New password must be at least 6 characters long', 'error');
+                    return;
+                }
+                
+                // Call API to change password
+                await app.api.changePassword(currentPassword, newPassword);
+                
+                // Update password in local user object (for localStorage compatibility)
+                app.user.password = newPassword;
+                localStorage.setItem('laundryUser', JSON.stringify(app.user));
+                
+                // Close modal and reset form
+                elements.changePasswordModal.classList.remove('show');
+                elements.changePasswordForm.reset();
+                
+                // Show success notification
+                showNotification('Password Changed', 'Your password has been successfully changed', 'success');
+            } catch (error) {
+                console.error('Error changing password:', error);
+                showNotification('Change Password Failed', error.message || 'Failed to change password', 'error');
             }
         }
 
         async function loadAddresses() {
             try {
-                // Get addresses for current user
-                const addresses = await app.db.getAll('addresses');
-                const userAddresses = addresses.filter(address => address.userId === app.user.id);
+                // Get addresses from localStorage
+                const addressesStr = localStorage.getItem('userAddresses_' + app.user.id);
+                const userAddresses = addressesStr ? JSON.parse(addressesStr) : [];
                 
                 // Clear addresses list
                 elements.addressesList.innerHTML = '';
@@ -5457,23 +5616,18 @@
 
         async function loadSettings() {
             try {
-                // Get settings from database
-                const settings = await app.db.getAll('settings');
+                // Get settings from localStorage
+                const settingsStr = localStorage.getItem('userSettings_' + app.user.id);
+                const settings = settingsStr ? JSON.parse(settingsStr) : {
+                    emailNotifications: true,
+                    smsNotifications: true,
+                    promoNotifications: false
+                };
                 
                 // Set checkbox values
-                const emailNotifications = settings.find(s => s.key === 'emailNotifications');
-                const smsNotifications = settings.find(s => s.key === 'smsNotifications');
-                const promoNotifications = settings.find(s => s.key === 'promoNotifications');
-                
-                if (emailNotifications) {
-                    document.getElementById('emailNotifications').checked = emailNotifications.value;
-                }
-                if (smsNotifications) {
-                    document.getElementById('smsNotifications').checked = smsNotifications.value;
-                }
-                if (promoNotifications) {
-                    document.getElementById('promoNotifications').checked = promoNotifications.value;
-                }
+                document.getElementById('emailNotifications').checked = settings.emailNotifications !== false;
+                document.getElementById('smsNotifications').checked = settings.smsNotifications !== false;
+                document.getElementById('promoNotifications').checked = settings.promoNotifications === true;
             } catch (error) {
                 console.error('Error loading settings:', error);
             }
@@ -5493,6 +5647,17 @@
                     return;
                 }
                 
+                // Get existing addresses from localStorage
+                const addressesStr = localStorage.getItem('userAddresses_' + app.user.id);
+                const addresses = addressesStr ? JSON.parse(addressesStr) : [];
+                
+                // If this is the default address, unset other default addresses
+                if (isDefault) {
+                    addresses.forEach(addr => {
+                        addr.isDefault = false;
+                    });
+                }
+                
                 // Create address object
                 const address = {
                     id: Date.now().toString(),
@@ -5504,21 +5669,11 @@
                     isDefault
                 };
                 
-                // If this is the default address, unset other default addresses
-                if (isDefault) {
-                    const addresses = await app.db.getAll('addresses');
-                    const userAddresses = addresses.filter(a => a.userId === app.user.id);
-                    
-                    for (const userAddress of userAddresses) {
-                        if (userAddress.isDefault) {
-                            userAddress.isDefault = false;
-                            await app.db.update('addresses', userAddress);
-                        }
-                    }
-                }
+                // Add address to array
+                addresses.push(address);
                 
-                // Add address to database
-                await app.db.add('addresses', address);
+                // Save to localStorage
+                localStorage.setItem('userAddresses_' + app.user.id, JSON.stringify(addresses));
                 
                 // Reset form
                 elements.addressForm.reset();
@@ -5623,8 +5778,15 @@
 
         async function deleteAddress(addressId) {
             try {
-                // Delete address from database
-                await app.db.delete('addresses', addressId);
+                // Get addresses from localStorage
+                const addressesStr = localStorage.getItem('userAddresses_' + app.user.id);
+                let addresses = addressesStr ? JSON.parse(addressesStr) : [];
+                
+                // Filter out the deleted address
+                addresses = addresses.filter(addr => addr.id !== addressId);
+                
+                // Save back to localStorage
+                localStorage.setItem('userAddresses_' + app.user.id, JSON.stringify(addresses));
                 
                 // Reload addresses
                 loadAddresses();
