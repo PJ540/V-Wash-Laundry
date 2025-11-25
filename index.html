@@ -4367,7 +4367,9 @@
                     status: 'active'
                 };
                 
-                await apiClient.post('/api/admin/admins', newAdmin);
+                console.log('Sending admin data:', newAdmin);
+                const response = await apiClient.post('/api/admin/admins', newAdmin);
+                console.log('Admin created successfully:', response);
                 
                 // Reset form
                 elements.addAdminForm.reset();
@@ -4380,7 +4382,7 @@
                 showNotification('Admin Added Successfully', `${name} has been added as an admin`, 'success');
             } catch (error) {
                 console.error('Error adding admin:', error);
-                const errorMsg = error.response?.data?.error || 'Failed to add admin';
+                const errorMsg = error.message || error.response?.data?.error || error.error || 'Failed to add admin';
                 showNotification('Add Failed', errorMsg, 'error');
             }
         }
