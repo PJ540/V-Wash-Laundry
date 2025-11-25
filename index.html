@@ -2330,20 +2330,38 @@
         // IndexedDB completely removed
         // ============================================
 
+        /* DatabaseManager class removed - using backend API instead */
+
         // App State
         const app = {
-            constructor() {
-                this.dbName = 'freshlaundry_db';
-                this.dbVersion = 2;
-                this.db = null;
+            user: null,
+            admin: null,
+            currentPage: 'home',
+            currentBookingStep: 1,
+            currentOrder: null,
+            orders: [],
+            addresses: [],
+            users: [],
+            services: [],
+            admins: [],
+            db: {
+                // Stub methods to prevent errors in non-critical functions
+                getAll: async () => { console.warn('IndexedDB disabled - using API instead'); return []; },
+                add: async () => { console.warn('IndexedDB disabled - using API instead'); },
+                update: async () => { console.warn('IndexedDB disabled - using API instead'); },
+                delete: async () => { console.warn('IndexedDB disabled - using API instead'); },
+                exportAllData: async () => { console.warn('Export disabled'); return {}; },
+                importData: async () => { console.warn('Import disabled'); },
+                clearAllData: async () => { console.warn('Clear disabled'); },
+                getDatabaseSize: async () => 'N/A (Cloud DB)'
             }
+        };
 
-            // Initialize the database
-            async init() {
-                return new Promise((resolve, reject) => {
-                    const request = indexedDB.open(this.dbName, this.dbVersion);
-                    
-                    request.onerror = (event) => {
+        // DOM Elements
+        const elements = {
+            // Main Site
+            mainSite: document.getElementById('mainSite'),
+            adminPanel: document.getElementById('adminPanel'),
                         console.error('Database error:', event.target.error);
                         reject(event.target.error);
                     };
