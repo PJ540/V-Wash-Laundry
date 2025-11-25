@@ -5948,6 +5948,10 @@
         }
 
         async function loadSampleData() {
+            // DISABLED - Not needed with backend API
+            console.log('Sample data loading disabled - using backend database');
+            return;
+            /* COMMENTED OUT
             try {
                 // Check if there are any users in the database
                 const users = await app.db.getAll('users');
@@ -6145,6 +6149,7 @@
             } catch (error) {
                 console.error('Error loading sample data:', error);
             }
+            END OF COMMENTED OUT CODE */
         }
 
         // Initialize app when DOM is loaded
