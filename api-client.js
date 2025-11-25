@@ -203,6 +203,34 @@ class APIClient {
         });
     }
 
+    // ============ GENERIC HTTP METHODS ============
+
+    async get(endpoint) {
+        return await this.request(endpoint, {
+            method: 'GET'
+        });
+    }
+
+    async post(endpoint, data) {
+        return await this.request(endpoint, {
+            method: 'POST',
+            body: JSON.stringify(data)
+        });
+    }
+
+    async put(endpoint, data) {
+        return await this.request(endpoint, {
+            method: 'PUT',
+            body: JSON.stringify(data)
+        });
+    }
+
+    async delete(endpoint) {
+        return await this.request(endpoint, {
+            method: 'DELETE'
+        });
+    }
+
     // ============ UTILITY METHODS ============
 
     logout() {
