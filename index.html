@@ -4199,8 +4199,11 @@
                 await apiClient.post('/api/services', newService);
                 
                 // Reset form
-                document.getElementById('addServiceForm').reset();
-                elements.addServiceModal.classList.remove('show');
+                const addServiceForm = document.getElementById('addServiceForm');
+                if (addServiceForm) addServiceForm.reset();
+                
+                const addServiceModal = document.getElementById('addServiceModal');
+                if (addServiceModal) addServiceModal.classList.remove('show');
                 
                 // Reload services table
                 loadServicesTable();
@@ -4258,8 +4261,11 @@
                 });
                 
                 // Reset form
-                document.getElementById('editServiceForm').reset();
-                elements.editServiceModal.classList.remove('show');
+                const editServiceForm = document.getElementById('editServiceForm');
+                if (editServiceForm) editServiceForm.reset();
+                
+                const editServiceModal = document.getElementById('editServiceModal');
+                if (editServiceModal) editServiceModal.classList.remove('show');
                 
                 // Reload services table
                 loadServicesTable();
@@ -4372,8 +4378,11 @@
                 console.log('Admin created successfully:', response);
                 
                 // Reset form
-                elements.addAdminForm.reset();
-                elements.addAdminModal.classList.remove('show');
+                const addAdminForm = document.getElementById('addAdminForm');
+                if (addAdminForm) addAdminForm.reset();
+                
+                const addAdminModal = document.getElementById('addAdminModal');
+                if (addAdminModal) addAdminModal.classList.remove('show');
                 
                 // Reload admins table
                 loadAdminsTable();
