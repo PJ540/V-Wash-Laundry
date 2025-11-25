@@ -53,6 +53,33 @@ class APIClient {
         }
     }
 
+    // Upload method for file uploads (doesn't set Content-Type, lets browser set it with boundary)
+    async upload(endpoint, formData) {
+        try {
+            const headers = {};
+            if (this.token) {
+                headers['Authorization'] = `Bearer ${this.token}`;
+            }
+
+            const response = await fetch(`${this.baseURL}${endpoint}`, {
+                method: 'POST',
+                headers: headers,
+                body: formData
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.error || 'Upload failed');
+            }
+
+            return data;
+        } catch (error) {
+            console.error('Upload Error:', error);
+            throw error;
+        }
+    }
+
     // ============ USER METHODS ============
 
     async registerUser(userData) {

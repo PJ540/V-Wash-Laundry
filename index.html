@@ -2051,8 +2051,16 @@
                             <input type="number" class="form-control" id="servicePrice" min="0" step="0.01" required>
                         </div>
                         <div class="form-group">
-                            <label for="serviceImage">Image URL</label>
-                            <input type="text" class="form-control" id="serviceImage" placeholder="Enter image URL (e.g., duvet.jpeg)">
+                            <label for="serviceImageFile">Service Image</label>
+                            <input type="file" class="form-control" id="serviceImageFile" accept="image/*">
+                            <small class="form-text text-muted">Upload an image (max 5MB)</small>
+                            <div id="imagePreview" style="margin-top: 10px; display: none;">
+                                <img id="previewImg" src="" alt="Preview" style="max-width: 200px; max-height: 200px; border-radius: 8px;">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="serviceImage">Or Enter Image URL</label>
+                            <input type="text" class="form-control" id="serviceImage" placeholder="Enter image URL (optional)">
                         </div>
                     </form>
                 </div>
@@ -2086,8 +2094,16 @@
                             <input type="number" class="form-control" id="editServicePrice" min="0" step="0.01" required>
                         </div>
                         <div class="form-group">
-                            <label for="editServiceImage">Image URL</label>
-                            <input type="text" class="form-control" id="editServiceImage" placeholder="Enter image URL">
+                            <label for="editServiceImageFile">Service Image</label>
+                            <input type="file" class="form-control" id="editServiceImageFile" accept="image/*">
+                            <small class="form-text text-muted">Upload new image (max 5MB) or leave empty to keep current</small>
+                            <div id="editImagePreview" style="margin-top: 10px; display: none;">
+                                <img id="editPreviewImg" src="" alt="Preview" style="max-width: 200px; max-height: 200px; border-radius: 8px;">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="editServiceImage">Or Enter Image URL</label>
+                            <input type="text" class="form-control" id="editServiceImage" placeholder="Enter image URL (optional)">
                         </div>
                     </form>
                 </div>
@@ -3290,6 +3306,38 @@
                 updateService();
             });
             
+            // Image Preview for Add Service
+            const serviceImageFile = document.getElementById('serviceImageFile');
+            if (serviceImageFile) {
+                serviceImageFile.addEventListener('change', (e) => {
+                    const file = e.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = (e) => {
+                            document.getElementById('previewImg').src = e.target.result;
+                            document.getElementById('imagePreview').style.display = 'block';
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                });
+            }
+            
+            // Image Preview for Edit Service
+            const editServiceImageFile = document.getElementById('editServiceImageFile');
+            if (editServiceImageFile) {
+                editServiceImageFile.addEventListener('change', (e) => {
+                    const file = e.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = (e) => {
+                            document.getElementById('editPreviewImg').src = e.target.result;
+                            document.getElementById('editImagePreview').style.display = 'block';
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                });
+            }
+            
             // User Management
             elements.closeEditUserModal.addEventListener('click', () => {
                 elements.editUserModal.classList.remove('show');
@@ -4105,12 +4153,31 @@
                 const name = document.getElementById('serviceName').value;
                 const description = document.getElementById('serviceDescription').value;
                 const price = document.getElementById('servicePrice').value;
-                const image = document.getElementById('serviceImage').value;
+                const imageFile = document.getElementById('serviceImageFile').files[0];
+                const imageUrl = document.getElementById('serviceImage').value;
                 
                 // Validate form
                 if (!name || !description || !price) {
                     showNotification('Please Fill Complete Information', 'Please fill in all required fields', 'error');
                     return;
+                }
+                
+                let finalImageUrl = imageUrl || 'default-service.jpg';
+                
+                // Upload image if file is selected
+                if (imageFile) {
+                    showNotification('Uploading Image', 'Please wait...', 'info');
+                    
+                    const formData = new FormData();
+                    formData.append('image', imageFile);
+                    
+                    try {
+                        const uploadResponse = await apiClient.upload('/api/upload/service-image', formData);
+                        finalImageUrl = uploadResponse.imageUrl;
+                    } catch (uploadError) {
+                        console.error('Image upload error:', uploadError);
+                        showNotification('Upload Failed', 'Failed to upload image. Using default.', 'error');
+                    }
                 }
                 
                 // Create new service
@@ -4119,7 +4186,7 @@
                     name,
                     description,
                     price: parseFloat(price),
-                    image: image || 'default-service.jpg'
+                    image: finalImageUrl
                 };
                 
                 // Save to database via API
@@ -4149,7 +4216,8 @@
                 const name = document.getElementById('editServiceName').value;
                 const description = document.getElementById('editServiceDescription').value;
                 const price = document.getElementById('editServicePrice').value;
-                const image = document.getElementById('editServiceImage').value;
+                const imageFile = document.getElementById('editServiceImageFile').files[0];
+                const imageUrl = document.getElementById('editServiceImage').value;
                 
                 // Validate form
                 if (!name || !description || !price) {
@@ -4157,12 +4225,30 @@
                     return;
                 }
                 
+                let finalImageUrl = imageUrl || 'default-service.jpg';
+                
+                // Upload new image if file is selected
+                if (imageFile) {
+                    showNotification('Uploading Image', 'Please wait...', 'info');
+                    
+                    const formData = new FormData();
+                    formData.append('image', imageFile);
+                    
+                    try {
+                        const uploadResponse = await apiClient.upload('/api/upload/service-image', formData);
+                        finalImageUrl = uploadResponse.imageUrl;
+                    } catch (uploadError) {
+                        console.error('Image upload error:', uploadError);
+                        showNotification('Upload Failed', 'Failed to upload image. Keeping current.', 'error');
+                    }
+                }
+                
                 // Update service via API
                 await apiClient.put(`/api/services/${serviceId}`, {
                     name,
                     description,
                     price: parseFloat(price),
-                    image: image || 'default-service.jpg'
+                    image: finalImageUrl
                 });
                 
                 // Reset form

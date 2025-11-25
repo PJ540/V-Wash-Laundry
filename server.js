@@ -5,6 +5,8 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const multer = require('multer');
+const cloudinary = require('cloudinary').v2;
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -21,6 +23,29 @@ app.use(cors({
 }));
 app.use(express.json());
 app.use(express.static('.')); // Serve static files from current directory
+
+// Configure Cloudinary
+cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET
+});
+
+// Configure Multer for memory storage
+const storage = multer.memoryStorage();
+const upload = multer({
+    storage: storage,
+    limits: {
+        fileSize: 5 * 1024 * 1024 // 5MB limit
+    },
+    fileFilter: (req, file, cb) => {
+        if (file.mimetype.startsWith('image/')) {
+            cb(null, true);
+        } else {
+            cb(new Error('Only image files are allowed!'), false);
+        }
+    }
+});
 
 // MongoDB Connection
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/vwash_laundry';
@@ -518,6 +543,39 @@ app.delete('/api/admin/users/:userId', authenticateToken, async (req, res) => {
 });
 
 // ============ SERVICE ROUTES ============
+
+// Upload Service Image
+app.post('/api/upload/service-image', authenticateToken, upload.single('image'), async (req, res) => {
+    try {
+        if (!req.file) {
+            return res.status(400).json({ error: 'No image file provided' });
+        }
+
+        // Upload to Cloudinary
+        const result = await new Promise((resolve, reject) => {
+            const uploadStream = cloudinary.uploader.upload_stream(
+                {
+                    folder: 'vwash-services',
+                    resource_type: 'image'
+                },
+                (error, result) => {
+                    if (error) reject(error);
+                    else resolve(result);
+                }
+            );
+            uploadStream.end(req.file.buffer);
+        });
+
+        res.json({
+            message: 'Image uploaded successfully',
+            imageUrl: result.secure_url,
+            publicId: result.public_id
+        });
+    } catch (error) {
+        console.error('Error uploading image:', error);
+        res.status(500).json({ error: 'Failed to upload image' });
+    }
+});
 
 // Get All Services
 app.get('/api/services', async (req, res) => {
