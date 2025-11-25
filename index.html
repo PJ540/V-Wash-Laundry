@@ -2325,9 +2325,13 @@
     </div>
 
     <script>
-        // Database Manager - DEPRECATED: Now using backend API instead of IndexedDB
-        /* COMMENTED OUT - NO LONGER NEEDED
-        class DatabaseManager {
+        // ============================================
+        // ALL DATABASE OPERATIONS NOW USE BACKEND API
+        // IndexedDB completely removed
+        // ============================================
+
+        // App State
+        const app = {
             constructor() {
                 this.dbName = 'freshlaundry_db';
                 this.dbVersion = 2;
